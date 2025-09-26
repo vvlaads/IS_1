@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Добавить человека</title>
+    <h:outputStylesheet name="styles.css"/>
+</h:head>
+
+<h:body>
+    <header>
+        <span id="student-name" class="student-info"> Силинцев Владислав Витальевич</span>
+        <span id="student-group" class="student-info">P3314</span>
+        <span id="student-id" class="student-info">355273</span>
+    </header>
+
+    <h:form>
+        <p:menubar>
+            <p:menuitem value="Главная" icon="pi pi-home" outcome="index.xhtml?faces-redirect=true" ajax="false"/>
+            <p:menuitem value="Добавить фильм" icon="pi pi-film" outcome="addMovie.xhtml?faces-redirect=true"
+                        ajax="false"/>
+            <p:menuitem value="Добавить человека" icon="pi pi-user" outcome="addPerson.xhtml?faces-redirect=true"
+                        ajax="false"/>
+            <p:menuitem value="Добавить локацию" icon="pi pi-map-marker" outcome="addLocation.xhtml?faces-redirect=true"
+                        ajax="false"/>
+            <p:menuitem value="Добавить координаты" icon="pi pi-compass"
+                        outcome="addCoordinates.xhtml?faces-redirect=true"
+                        ajax="false"/>
+        </p:menubar>
+    </h:form>
+
+    <h:form id="addMovieForm">
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="name" value="Name:"/>
+            <p:inputText id="name" value="#{movieBean.movie.name}" required="true"/>
+
+            <h:outputLabel for="creationDate" value="CreationDate:"/>
+            <p:inputText id="creationDate" value="#{movieBean.movie.creationDate}" required="true"/>
+
+            <h:outputLabel for="oscarsCount" value="OscarsCount:"/>
+            <p:inputText id="oscarsCount" value="#{movieBean.movie.oscarsCount}" required="true"/>
+
+            <h:outputLabel for="eyeColor" value="Цвет глаз:"/>
+            <p:selectOneMenu id="eyeColor" value="#{personBean.person.eyeColor}">
+                <f:selectItems value="#{personBean.colors}" var="c" itemLabel="#{c}" itemValue="#{c}"/>
+            </p:selectOneMenu>
+        </h:panelGrid>
+
+        <p:commandButton value="Выбрать координаты" onclick="PF('coordinatesDialog').show(); return false;"/>
+
+        <p:dialog header="Выбор координат" widgetVar="coordinatesDialog" modal="true" resizable="false">
+            <p:dataTable value="#{movieBean.coordinatesList}" var="coordinates" selectionMode="single"
+                         selection="#{movieBean.selectedCoordinates}" rowKey="#{coordinates.id}">
+                <p:column headerText="ID">#{coordinates.id}</p:column>
+                <p:column headerText="X">#{coordinates.x}</p:column>
+                <p:column headerText="Y">#{coordinates.y}</p:column>
+                <p:column>
+                    <p:commandButton value="Выбрать" update=":addMovieForm" oncomplete="PF('locDialog').hide()"
+                                     actionListener="#{personBean.selectLocation(loc)}"/>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+
+        <p:commandButton value="Сохранить" action="#{personBean.add}" update="@none"/>
+        <p:commandButton value="Отмена" action="index.xhtml?faces-redirect=true"/>
+    </h:form>
+</h:body>
+
+</html>
