@@ -17,22 +17,30 @@ public class PersonBean {
     @EJB
     private DatabaseManager databaseManager;
 
-    private Person person = new Person();
     private List<Person> personList;
-    private List<Location> locationList;
-
+    private Person person = new Person();
     private Location selectedLocation;
 
-    public String add() {
+    public String addPerson() {
         person.setLocation(selectedLocation);
-        databaseManager.savePerson(person);
-        person = new Person(); // сброс формы
-        return "index.xhtml?faces-redirect=true";
+        databaseManager.addPerson(person);
+        cleanData();
+        return "index.xhtml";
     }
 
-    public String goToAddForm() {
+    public void editPerson() {
+
+    }
+
+    public void deletePerson() {
+
+    }
+
+    private void cleanData() {
         person = new Person();
-        return "addPerson.xhtml";
+        personList = null;
+        selectedLocation = null;
+        System.out.println("Cleaned Person Form");
     }
 
     public void selectLocation(Location loc) {
@@ -45,18 +53,10 @@ public class PersonBean {
 
     public List<Person> getPersonList() {
         if (personList == null) {
-            personList = databaseManager.getAllPersons();
+            personList = databaseManager.getPersonList();
         }
         return personList;
     }
-
-    public List<Location> getLocationList() {
-        if (locationList == null) {
-            locationList = databaseManager.getAllLocations();
-        }
-        return locationList;
-    }
-
 
     public Person getPerson() {
         return person;

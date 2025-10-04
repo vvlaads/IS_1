@@ -8,7 +8,6 @@ import lab.database.DatabaseManager;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import java.time.LocalDate;
 import java.util.List;
 
 @ManagedBean(name = "movieBean")
@@ -17,56 +16,45 @@ public class MovieBean {
     @EJB
     private DatabaseManager databaseManager;
 
-    private Movie movie = new Movie();
     private List<Movie> movieList;
+    private Movie movie = new Movie();
 
-    // списки для выпадающих списков
-    private List<Person> personList;
-    private List<Coordinates> coordinatesList;
-
-    // выбранные значения
     private Person selectedDirector;
     private Person selectedScreenwriter;
     private Person selectedOperator;
     private Coordinates selectedCoordinates;
 
-    public String add() {
+    public String addMovie() {
         movie.setDirector(selectedDirector);
         movie.setScreenwriter(selectedScreenwriter);
         movie.setOperator(selectedOperator);
         movie.setCoordinates(selectedCoordinates);
-        databaseManager.saveMovie(movie);
+        databaseManager.addMovie(movie);
+        cleanData();
+        return "index.xhtml";
+    }
 
-        // сброс
+    public void editMovie() {
+    }
+
+    public void deleteMovie() {
+    }
+
+    private void cleanData() {
         movie = new Movie();
         selectedDirector = null;
         selectedScreenwriter = null;
         selectedOperator = null;
         selectedCoordinates = null;
-
-        movieList = databaseManager.getAllMovies(); // обновляем список
-        return "index.xhtml?faces-redirect=true";
+        movieList = null;
+        System.out.println("Cleaned Movie Form");
     }
 
     public List<Movie> getMovieList() {
         if (movieList == null) {
-            movieList = databaseManager.getAllMovies();
+            movieList = databaseManager.getMovieList();
         }
         return movieList;
-    }
-
-    public List<Person> getPersonList() {
-        if (personList == null) {
-            personList = databaseManager.getAllPersons();
-        }
-        return personList;
-    }
-
-    public List<Coordinates> getCoordinatesList() {
-        if (coordinatesList == null) {
-            coordinatesList = databaseManager.getAllCoordinates();
-        }
-        return coordinatesList;
     }
 
     public Movie getMovie() {

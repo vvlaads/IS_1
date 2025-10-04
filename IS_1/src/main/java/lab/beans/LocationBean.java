@@ -13,14 +13,33 @@ import java.util.List;
 public class LocationBean {
     @EJB
     private DatabaseManager databaseManager;
-    private Location location = new Location();
-    private List<Location> locationList;
 
-    public String add() {
-        databaseManager.saveLocation(location);
+    private List<Location> locationList;
+    private Location location = new Location();
+
+    public String addLocation() {
+        databaseManager.addLocation(location);
+        cleanData();
+        return "index.xhtml";
+    }
+
+    public void editLocation() {
+    }
+
+    public void deleteLocation() {
+    }
+
+    private void cleanData() {
         location = new Location();
         locationList = null;
-        return "index.xhtml";
+        System.out.println("Cleaned Location Form");
+    }
+
+    public List<Location> getLocationList() {
+        if (locationList == null) {
+            locationList = databaseManager.getLocationList();
+        }
+        return locationList;
     }
 
     public Location getLocation() {
@@ -29,16 +48,5 @@ public class LocationBean {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public List<Location> getLocationList() {
-        if (locationList == null) {
-            locationList = databaseManager.getAllLocations();
-        }
-        return locationList;
-    }
-
-    public void updateList() {
-        locationList = null;
     }
 }

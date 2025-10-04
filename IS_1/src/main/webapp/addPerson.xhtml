@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title>Добавить человека</title>
     <h:outputStylesheet name="styles.css"/>
+    <h:outputStylesheet name="forms.css"/>
 </h:head>
 
 <h:body>
     <header>
-        <span id="student-name" class="student-info"> Силинцев Владислав Витальевич</span>
-        <span id="student-group" class="student-info">P3314</span>
-        <span id="student-id" class="student-info">355273</span>
+        <span class="student-info">Силинцев Владислав Витальевич</span>
+        <span class="student-info">P3314</span>
+        <span class="student-info">355273</span>
     </header>
 
     <h:form>
@@ -23,55 +26,40 @@
             <p:menuitem value="Добавить локацию" icon="pi pi-map-marker" outcome="addLocation.xhtml?faces-redirect=true"
                         ajax="false"/>
             <p:menuitem value="Добавить координаты" icon="pi pi-compass"
-                        outcome="addCoordinates.xhtml?faces-redirect=true"
-                        ajax="false"/>
+                        outcome="addCoordinates.xhtml?faces-redirect=true" ajax="false"/>
         </p:menubar>
     </h:form>
 
-    <h:form id="addPersonForm">
-        <h:panelGrid columns="2" cellpadding="5">
-            <h:outputLabel for="name" value="Имя:"/>
-            <p:inputText id="name" value="#{personBean.person.name}" required="true"/>
+    <div class="form-container">
+        <div class="form-box">
+            <h2>Добавить человека</h2>
 
-            <h:outputLabel for="eyeColor" value="Цвет глаз:"/>
-            <p:selectOneMenu id="eyeColor" value="#{personBean.person.eyeColor}">
-                <f:selectItems value="#{personBean.colors}" var="c" itemLabel="#{c}" itemValue="#{c}"/>
-            </p:selectOneMenu>
+            <h:form id="addPersonForm">
+                <h:panelGrid columns="2" columnClasses="labelCol,fieldCol" cellpadding="8" style="width:100%">
+                    <h:outputLabel for="name" value="Имя:" style="text-align:right;"/>
+                    <p:inputText id="name" value="#{locationBean.location.x}" required="false"/>
+                    <h:outputLabel/>
+                    <p:message for="x" style="color:red"/>
 
-            <h:outputLabel for="hairColor" value="Цвет волос:"/>
-            <p:selectOneMenu id="hairColor" value="#{personBean.person.hairColor}">
-                <f:selectItems value="#{personBean.colors}" var="c" itemLabel="#{c}" itemValue="#{c}"/>
-            </p:selectOneMenu>
+                    <h:outputLabel for="y" value="Y:" style="text-align:right;"/>
+                    <p:inputText id="y" value="#{locationBean.location.y}" required="false"/>
+                    <h:outputLabel/>
+                    <p:message for="y" style="color:red"/>
 
-            <h:outputLabel for="birthday" value="Дата рождения:"/>
-            <p:datePicker id="birthday" value="#{personBean.person.birthday}" pattern="yyyy-MM-dd" showIcon="true"/>
+                    <h:outputLabel for="z" value="Z:" style="text-align:right;"/>
+                    <p:inputText id="z" value="#{locationBean.location.z}" required="true"
+                                 requiredMessage="Введите значение Z"/>
+                    <h:outputLabel/>
+                    <p:message for="z" style="color:red"/>
+                </h:panelGrid>
 
-            <h:outputLabel for="weight" value="Вес:"/>
-            <p:inputText id="weight" value="#{personBean.person.weight}" required="true"/>
-
-            <h:outputLabel for="passportID" value="Passport ID:"/>
-            <p:inputText id="passportID" value="#{personBean.person.passportID}"/>
-        </h:panelGrid>
-
-        <p:commandButton value="Выбрать локацию" onclick="PF('locDialog').show(); return false;"/>
-
-        <p:dialog header="Выбор локации" widgetVar="locDialog" modal="true" resizable="false">
-            <p:dataTable value="#{personBean.locationList}" var="loc" selectionMode="single"
-                         selection="#{personBean.selectedLocation}" rowKey="#{loc.id}">
-                <p:column headerText="Название">#{loc.id}</p:column>
-                <p:column headerText="X">#{loc.x}</p:column>
-                <p:column headerText="Y">#{loc.y}</p:column>
-                <p:column headerText="Z">#{loc.z}</p:column>
-                <p:column>
-                    <p:commandButton value="Выбрать" update=":addPersonForm" oncomplete="PF('locDialog').hide()"
-                                     actionListener="#{personBean.selectLocation(loc)}"/>
-                </p:column>
-            </p:dataTable>
-        </p:dialog>
-
-        <p:commandButton value="Сохранить" action="#{personBean.add}" update="@none"/>
-        <p:commandButton value="Отмена" action="index.xhtml?faces-redirect=true"/>
-    </h:form>
+                <div class="buttons">
+                    <p:commandButton value="Сохранить" action="#{locationBean.addLocation}" ajax="false"/>
+                    <p:commandButton value="Отмена" action="index.xhtml?faces-redirect=true" ajax="false"
+                                     immediate="true" style="margin-left:10px;"/>
+                </div>
+            </h:form>
+        </div>
+    </div>
 </h:body>
-
 </html>

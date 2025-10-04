@@ -20,7 +20,7 @@ public class DatabaseManager {
 
     private final Validator validator = new Validator();
 
-    public void saveMovie(Movie movie) {
+    public void addMovie(Movie movie) {
         if (validator.validateMovie(movie)) {
             EntityTransaction transaction = em.getTransaction();
             try {
@@ -39,7 +39,7 @@ public class DatabaseManager {
         }
     }
 
-    public void savePerson(Person person) {
+    public void addPerson(Person person) {
         if (validator.validatePerson(person)) {
             EntityTransaction transaction = em.getTransaction();
             try {
@@ -58,7 +58,7 @@ public class DatabaseManager {
         }
     }
 
-    public void saveLocation(Location location) {
+    public void addLocation(Location location) {
         if (validator.validateLocation(location)) {
             EntityTransaction transaction = em.getTransaction();
             try {
@@ -77,7 +77,7 @@ public class DatabaseManager {
         }
     }
 
-    public void saveCoordinates(Coordinates coordinates) {
+    public void addCoordinates(Coordinates coordinates) {
         if (validator.validateCoordinates(coordinates)) {
             EntityTransaction transaction = em.getTransaction();
             try {
@@ -96,19 +96,19 @@ public class DatabaseManager {
         }
     }
 
-    public List<Movie> getAllMovies() {
+    public List<Movie> getMovieList() {
         return em.createQuery("SELECT m FROM Movie m", Movie.class).getResultList();
     }
 
-    public List<Person> getAllPersons() {
+    public List<Person> getPersonList() {
         return em.createQuery("SELECT p FROM Person p", Person.class).getResultList();
     }
 
-    public List<Location> getAllLocations() {
+    public List<Location> getLocationList() {
         return em.createQuery("SELECT l FROM Location l", Location.class).getResultList();
     }
 
-    public List<Coordinates> getAllCoordinates() {
+    public List<Coordinates> getCoordinatesList() {
         return em.createQuery("SELECT c FROM Coordinates c", Coordinates.class).getResultList();
     }
 }

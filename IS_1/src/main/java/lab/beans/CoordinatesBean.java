@@ -13,14 +13,33 @@ import java.util.List;
 public class CoordinatesBean {
     @EJB
     private DatabaseManager databaseManager;
-    private Coordinates coordinates = new Coordinates();
-    private List<Coordinates> coordinatesList;
 
-    public String add() {
-        databaseManager.saveCoordinates(coordinates);
+    private List<Coordinates> coordinatesList;
+    private Coordinates coordinates = new Coordinates();
+
+    public String addCoordinates() {
+        databaseManager.addCoordinates(coordinates);
+        cleanData();
+        return "index.xhtml";
+    }
+
+    public void editCoordinates() {
+    }
+
+    public void deleteCoordinates() {
+    }
+
+    private void cleanData() {
         coordinates = new Coordinates();
         coordinatesList = null;
-        return "index.xhtml";
+        System.out.println("Cleaned Coordinates Form");
+    }
+
+    public List<Coordinates> getCoordinatesList() {
+        if (coordinatesList == null) {
+            coordinatesList = databaseManager.getCoordinatesList();
+        }
+        return coordinatesList;
     }
 
     public Coordinates getCoordinates() {
@@ -29,12 +48,5 @@ public class CoordinatesBean {
 
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
-    }
-
-    public List<Coordinates> getCoordinatesList() {
-        if (coordinatesList == null) {
-            coordinatesList = databaseManager.getAllCoordinates();
-        }
-        return coordinatesList;
     }
 }
