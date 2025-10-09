@@ -19,10 +19,10 @@ public class PersonBean {
 
     private List<Person> personList;
     private Person person = new Person();
-    private Location selectedLocation;
+    private Integer selectedLocationId;
 
     public String addPerson() {
-        person.setLocation(selectedLocation);
+        person.setLocation(databaseManager.getLocationById(selectedLocationId));
         databaseManager.addPerson(person);
         cleanData();
         return "index.xhtml";
@@ -39,15 +39,11 @@ public class PersonBean {
     private void cleanData() {
         person = new Person();
         personList = null;
-        selectedLocation = null;
+        selectedLocationId = null;
         System.out.println("Cleaned Person Form");
     }
 
-    public void selectLocation(Location loc) {
-        selectedLocation = loc;
-    }
-
-    public List<Color> getColors() {
+    public List<Color> getColorList() {
         return Arrays.asList(Color.values());
     }
 
@@ -66,11 +62,11 @@ public class PersonBean {
         this.person = person;
     }
 
-    public Location getSelectedLocation() {
-        return selectedLocation;
+    public Integer getSelectedLocationId() {
+        return selectedLocationId;
     }
 
-    public void setSelectedLocation(Location selectedLocation) {
-        this.selectedLocation = selectedLocation;
+    public void setSelectedLocationId(Integer selectedLocationId) {
+        this.selectedLocationId = selectedLocationId;
     }
 }

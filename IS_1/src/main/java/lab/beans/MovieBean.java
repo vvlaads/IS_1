@@ -1,13 +1,14 @@
 package lab.beans;
 
-import lab.data.Coordinates;
 import lab.data.Movie;
-import lab.data.Person;
 import lab.database.DatabaseManager;
+import lab.enums.MovieGenre;
+import lab.enums.MpaaRating;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import java.util.Arrays;
 import java.util.List;
 
 @ManagedBean(name = "movieBean")
@@ -19,16 +20,16 @@ public class MovieBean {
     private List<Movie> movieList;
     private Movie movie = new Movie();
 
-    private Person selectedDirector;
-    private Person selectedScreenwriter;
-    private Person selectedOperator;
-    private Coordinates selectedCoordinates;
+    private Integer selectedDirectorId;
+    private Integer selectedScreenwriterId;
+    private Integer selectedOperatorId;
+    private Integer selectedCoordinatesId;
 
     public String addMovie() {
-        movie.setDirector(selectedDirector);
-        movie.setScreenwriter(selectedScreenwriter);
-        movie.setOperator(selectedOperator);
-        movie.setCoordinates(selectedCoordinates);
+        movie.setDirector(databaseManager.getPersonById(selectedDirectorId));
+        movie.setScreenwriter(databaseManager.getPersonById(selectedScreenwriterId));
+        movie.setOperator(databaseManager.getPersonById(selectedOperatorId));
+        movie.setCoordinates(databaseManager.getCoordinatesById(selectedCoordinatesId));
         databaseManager.addMovie(movie);
         cleanData();
         return "index.xhtml";
@@ -42,10 +43,10 @@ public class MovieBean {
 
     private void cleanData() {
         movie = new Movie();
-        selectedDirector = null;
-        selectedScreenwriter = null;
-        selectedOperator = null;
-        selectedCoordinates = null;
+        selectedDirectorId = null;
+        selectedScreenwriterId = null;
+        selectedOperatorId = null;
+        selectedCoordinatesId = null;
         movieList = null;
         System.out.println("Cleaned Movie Form");
     }
@@ -65,35 +66,43 @@ public class MovieBean {
         this.movie = movie;
     }
 
-    public Person getSelectedDirector() {
-        return selectedDirector;
+    public List<MpaaRating> getMpaaRatingList() {
+        return Arrays.asList(MpaaRating.values());
     }
 
-    public void setSelectedDirector(Person selectedDirector) {
-        this.selectedDirector = selectedDirector;
+    public List<MovieGenre> getMovieGenreList() {
+        return Arrays.asList(MovieGenre.values());
     }
 
-    public Person getSelectedScreenwriter() {
-        return selectedScreenwriter;
+    public Integer getSelectedDirectorId() {
+        return selectedDirectorId;
     }
 
-    public void setSelectedScreenwriter(Person selectedScreenwriter) {
-        this.selectedScreenwriter = selectedScreenwriter;
+    public void setSelectedDirectorId(Integer selectedDirectorId) {
+        this.selectedDirectorId = selectedDirectorId;
     }
 
-    public Person getSelectedOperator() {
-        return selectedOperator;
+    public Integer getSelectedScreenwriterId() {
+        return selectedScreenwriterId;
     }
 
-    public void setSelectedOperator(Person selectedOperator) {
-        this.selectedOperator = selectedOperator;
+    public void setSelectedScreenwriterId(Integer selectedScreenwriterId) {
+        this.selectedScreenwriterId = selectedScreenwriterId;
     }
 
-    public Coordinates getSelectedCoordinates() {
-        return selectedCoordinates;
+    public Integer getSelectedOperatorId() {
+        return selectedOperatorId;
     }
 
-    public void setSelectedCoordinates(Coordinates selectedCoordinates) {
-        this.selectedCoordinates = selectedCoordinates;
+    public void setSelectedOperatorId(Integer selectedOperatorId) {
+        this.selectedOperatorId = selectedOperatorId;
+    }
+
+    public Integer getSelectedCoordinatesId() {
+        return selectedCoordinatesId;
+    }
+
+    public void setSelectedCoordinatesId(Integer selectedCoordinatesId) {
+        this.selectedCoordinatesId = selectedCoordinatesId;
     }
 }

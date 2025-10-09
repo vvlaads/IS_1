@@ -111,4 +111,60 @@ public class DatabaseManager {
     public List<Coordinates> getCoordinatesList() {
         return em.createQuery("SELECT c FROM Coordinates c", Coordinates.class).getResultList();
     }
+
+    public Movie getMovieById(int id) {
+        try {
+            Movie movie = em.find(Movie.class, id);
+            if (movie == null) {
+                System.err.println("Movie not found for id: " + id);
+            }
+            return movie;
+        } catch (Exception e) {
+            System.err.println("Error while fetching Movie by id: " + id);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Person getPersonById(int id) {
+        try {
+            Person person = em.find(Person.class, id);
+            if (person == null) {
+                System.err.println("Person not found for id: " + id);
+            }
+            return person;
+        } catch (Exception e) {
+            System.err.println("Error while fetching Person by id: " + id);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Location getLocationById(int id) {
+        try {
+            Location location = em.find(Location.class, id);
+            if (location == null) {
+                System.err.println("Location not found for id: " + id);
+            }
+            return location;
+        } catch (Exception e) {
+            System.err.println("Error while fetching Location by id: " + id);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Coordinates getCoordinatesById(int id) {
+        try {
+            Coordinates coordinates = em.find(Coordinates.class, id);
+            if (coordinates == null) {
+                System.err.println("Coordinates not found for id: " + id);
+            }
+            return coordinates;
+        } catch (Exception e) {
+            System.err.println("Error while fetching Coordinates by id: " + id);
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

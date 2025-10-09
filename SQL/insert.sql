@@ -1,0 +1,25 @@
+INSERT INTO LOCATIONS(X, Y, Z)
+VALUES
+(1, 1, 1),
+(12, -56, 43),
+(22, 104, -4),
+(0, 0, 0);
+
+
+INSERT INTO COORDINATES(X, Y)
+VALUES
+(0, 0),
+(1, -1),
+(432, -45);
+
+
+INSERT INTO PERSONS()
+VALUES
+(),
+();
+
+
+INSERT INTO MOVIES()
+VALUES
+(),
+();
