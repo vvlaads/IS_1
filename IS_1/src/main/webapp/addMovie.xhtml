@@ -51,81 +51,97 @@
                     <h:outputLabel/>
                     <p:message for="coordinates" style="color:red"/>
 
+
                     <h:outputLabel for="oscarsCount" value="Количество Оскаров:" style="text-align:right;"/>
                     <p:inputText id="oscarsCount" value="#{movieBean.movie.oscarsCount}" required="true"/>
-                    <h:outputLabel/>
-                    <p:message for="oscarsCount" style="color:red"/>
-
-                    <h:outputLabel for="budget" value="Бюджет:" style="text-align:right;"/>
-                    <p:inputText id="budget" value="#{movieBean.movie.budget}" required="true"/>
-                    <h:outputLabel/>
-                    <p:message for="oscarsCount" style="color:red"/>
-
-                    <h:outputLabel for="totalBoxOffice" value="Общие Кассовые сборы:" style="text-align:right;"/>
-                    <p:inputText id="totalBoxOffice" value="#{movieBean.movie.totalBoxOffice}" required="true"/>
-                    <h:outputLabel/>
-                    <p:message for="totalBoxOffice" style="color:red"/>
 
                     <h:outputLabel for="mpaaRating" value="Рейтинг MPAA:" style="text-align:right;"/>
                     <p:selectOneMenu id="mpaaRating" value="#{movieBean.movie.mpaaRating}" required="true">
                         <f:selectItems value="#{movieBean.mpaaRatingList}" var="mpaa"
                                        itemValue="#{mpaa}" itemLabel="#{mpaa}"/>
                     </p:selectOneMenu>
+
+                    <h:outputLabel/>
+                    <p:message for="oscarsCount" style="color:red"/>
+
                     <h:outputLabel/>
                     <p:message for="mpaaRating" style="color:red"/>
+
+
+                    <h:outputLabel for="budget" value="Бюджет:" style="text-align:right;"/>
+                    <p:inputText id="budget" value="#{movieBean.movie.budget}" required="true"/>
 
                     <h:outputLabel for="director" value="Режиссёр:" style="text-align:right;"/>
                     <p:selectOneMenu id="director" value="#{movieBean.selectedDirectorId}" required="true">
                         <f:selectItems value="#{personBean.personList}" var="person"
-                                       itemValue="#{person.id}" itemLabel="ID: #{person.id} #{preson.name}"/>
+                                       itemValue="#{person.id}" itemLabel="ID: #{person.id} #{person.name}"/>
                     </p:selectOneMenu>
+
+                    <h:outputLabel/>
+                    <p:message for="budget" style="color:red"/>
+
                     <h:outputLabel/>
                     <p:message for="director" style="color:red"/>
+
+
+                    <h:outputLabel for="totalBoxOffice" value="Общие Кассовые сборы:" style="text-align:right;"/>
+                    <p:inputText id="totalBoxOffice" value="#{movieBean.movie.totalBoxOffice}" required="true"/>
 
                     <h:outputLabel for="screenwriter" value="Сценарист:" style="text-align:right;"/>
                     <p:selectOneMenu id="screenwriter" value="#{movieBean.selectedScreenwriterId}" required="true">
                         <f:selectItems value="#{personBean.personList}" var="person"
-                                       itemValue="#{person.id}" itemLabel="ID: #{person.id} #{preson.name}"/>
+                                       itemValue="#{person.id}" itemLabel="ID: #{person.id} #{person.name}"/>
                     </p:selectOneMenu>
+
+                    <h:outputLabel/>
+                    <p:message for="totalBoxOffice" style="color:red"/>
+
                     <h:outputLabel/>
                     <p:message for="screenwriter" style="color:red"/>
+
+
+                    <h:outputLabel for="length" value="Продолжительность:" style="text-align:right;"/>
+                    <p:inputText id="length" value="#{movieBean.movie.length}" required="true"/>
 
                     <h:outputLabel for="operator" value="Оператор:" style="text-align:right;"/>
                     <p:selectOneMenu id="operator" value="#{movieBean.selectedOperatorId}" required="true">
                         <f:selectItems value="#{personBean.personList}" var="person"
-                                       itemValue="#{person.id}" itemLabel="ID: #{person.id} #{preson.name}"/>
+                                       itemValue="#{person.id}" itemLabel="ID: #{person.id} #{person.name}"/>
                     </p:selectOneMenu>
+
+                    <h:outputLabel/>
+                    <p:message for="length" style="color:red"/>
+
                     <h:outputLabel/>
                     <p:message for="operator" style="color:red"/>
 
-                    <h:outputLabel for="length" value="Продолжительность:" style="text-align:right;"/>
-                    <p:inputText id="length" value="#{movieBean.movie.length}" required="true"/>
-                    <h:outputLabel/>
-                    <p:message for="length" style="color:red"/>
 
                     <h:outputLabel for="goldenPalmCount" value="Количество Золотых пальмовых ветвей:"
                                    style="text-align:right;"/>
                     <p:inputText id="goldenPalmCount" value="#{movieBean.movie.goldenPalmCount}" required="true"/>
+
+                    <h:outputLabel for="genre" value="Жанр:" style="text-align:right;"/>
+                    <p:selectOneMenu id="genre" value="#{movieBean.movie.genre}" required="true">
+                        <f:selectItems value="#{movieBean.movieGenreList}" var="genre"
+                                       itemValue="#{genre}" itemLabel="#{genre}"/>
+                    </p:selectOneMenu>
+
                     <h:outputLabel/>
                     <p:message for="goldenPalmCount" style="color:red"/>
+
+                    <h:outputLabel/>
+                    <p:message for="genre" style="color:red"/>
+
 
                     <h:outputLabel for="usaBoxOffice" value="Кассовые сборы в США:"
                                    style="text-align:right;"/>
                     <p:inputText id="usaBoxOffice" value="#{movieBean.movie.usaBoxOffice}" required="true"/>
                     <h:outputLabel/>
                     <p:message for="usaBoxOffice" style="color:red"/>
-
-                    <h:outputLabel for="genre" value="Жанр:" style="text-align:right;"/>
-                    <p:selectOneMenu id="genre" value="#{movieBean.movieGenreList}" required="true">
-                        <f:selectItems value="#{movieBean.mpaaRatingList}" var="mpaa"
-                                       itemValue="#{mpaa}" itemLabel="#{mpaa}"/>
-                    </p:selectOneMenu>
-                    <h:outputLabel/>
-                    <p:message for="genre" style="color:red"/>
                 </h:panelGrid>
 
                 <div class="buttons">
-                    <p:commandButton value="Сохранить" action="#{personBean.addPerson}" ajax="false"/>
+                    <p:commandButton value="Сохранить" action="#{movieBean.addMovie}" ajax="false"/>
                     <p:commandButton value="Отмена" action="index.xhtml?faces-redirect=true" ajax="false"
                                      immediate="true" style="margin-left:10px;"/>
                 </div>

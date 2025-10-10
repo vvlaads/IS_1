@@ -8,8 +8,6 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "movies")
@@ -35,6 +33,7 @@ public class Movie {
     @DecimalMin(value = "0.0", inclusive = false)
     private float totalBoxOffice; //Значение поля должно быть больше 0
     @Column(name = "MPAA_RATING")
+    @Enumerated(EnumType.STRING)
     private MpaaRating mpaaRating; //Поле может быть null
     @ManyToOne
     @JoinColumn(name = "director_id")
@@ -55,6 +54,7 @@ public class Movie {
     @DecimalMin(value = "0.0", inclusive = false)
     private double usaBoxOffice; //Значение поля должно быть больше 0
     @Column
+    @Enumerated(EnumType.STRING)
     private MovieGenre genre; //Поле может быть null
 
     public Movie() {

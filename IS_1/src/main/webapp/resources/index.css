@@ -1,0 +1,51 @@
+h2 {
+    padding-left: 20px;
+}
+
+.data-table {
+        display: block;
+        justify-items: center;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 40px; /* расстояние между фильтрами и таблицей */
+    margin: 20px 40px; /* отступы вокруг блока */
+}
+
+.table-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* расстояние между секциями фильтра и сортировки */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    min-width: 300px; /* чтобы форма не сжималась слишком сильно */
+}
+
+.table-settings h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.table-settings .ui-inputtext {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.data-table {
+    flex-grow: 1; /* таблица занимает всё оставшееся место */
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 10px;
+}
+
+h2 {
+    padding-left: 40px;
+    margin-top: 30px;
+    color: #2d2d2d;
+}
