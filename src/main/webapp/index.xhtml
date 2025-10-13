@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>IS_1</title>
+    <h:outputStylesheet name="styles.css"/>
+    <h:outputStylesheet name="index.css"/>
+</h:head>
+
+<h:body>
+    <header>
+        <span id="student-name" class="student-info"> Силинцев Владислав Витальевич</span>
+        <span id="student-group" class="student-info">P3314</span>
+        <span id="student-id" class="student-info">355273</span>
+    </header>
+
+    <h:form>
+        <p:menubar>
+            <p:menuitem value="Главная" icon="pi pi-home" outcome="index.xhtml?faces-redirect=true" ajax="false"/>
+            <p:menuitem value="Добавить фильм" icon="pi pi-video" outcome="addMovie.xhtml?faces-redirect=true"
+                        ajax="false"/>
+            <p:menuitem value="Добавить человека" icon="pi pi-user" outcome="addPerson.xhtml?faces-redirect=true"
+                        ajax="false"/>
+            <p:menuitem value="Добавить локацию" icon="pi pi-map-marker" outcome="addLocation.xhtml?faces-redirect=true"
+                        ajax="false"/>
+            <p:menuitem value="Добавить координаты" icon="pi pi-compass"
+                        outcome="addCoordinates.xhtml?faces-redirect=true"
+                        ajax="false"/>
+        </p:menubar>
+    </h:form>
+
+    <h2>Список фильмов:</h2>
+    <div class="table-container">
+        <div class="table-settings">
+            <h3>Фильтры:</h3>
+            <h:form class="filterForm">
+                <h:panelGrid columns="2" cellpadding="8" style="width:100%">
+                    <h:outputLabel for="nameFilter" value="Название:" style="text-align:right;"/>
+                    <p:inputText id="nameFilter" value="#{movieBean.nameFilter}" required="false"/>
+
+                    <h:outputLabel for="mpaaRatingFilter" value="Рейтинг MPAA:" style="text-align:right;"/>
+                    <p:inputText id="mpaaRatingFilter" value="#{movieBean.mpaaRatingFilter}" required="false"/>
+
+                    <h:outputLabel for="genreFilter" value="Жанр:" style="text-align:right;"/>
+                    <p:inputText id="genreFilter" value="#{movieBean.genreFilter}" required="false"/>
+
+                    <p:commandButton value="Применить фильтры" action="#{movieBean.applyFilters()}"
+                                     update="movieTable"/>
+                    <p:commandButton value="Сбросить фильтры" action="#{movieBean.removeFilters()}"
+                                     update="movieTable"/>
+                </h:panelGrid>
+            </h:form>
+
+            <h:form class="sortForm">
+                <h:panelGrid columns="2" cellpadding="8" style="width:100%">
+                    <h3>Сортировка:</h3>
+                    <p:selectOneMenu id="sortMovie"
+                                     value="#{movieBean.sortByColumn}"
+                                     required="false">
+                        <f:selectItems value="#{movieBean.sortColumns}"
+                                       var="columnName"
+                                       itemValue="#{columnName}"
+                                       itemLabel="#{columnName}"/>
+
+                        <!-- Когда пользователь меняет значение -->
+                        <p:ajax event="change"
+                                listener="#{movieBean.applySort}"
+                                update="movieTable"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+            </h:form>
+        </div>
+        <p:dataTable id="movieTable"
+                     class="data-table"
+                     value="#{movieBean.filteredMovieList}"
+                     var="m"
+                     paginator="true"
+                     rows="5"
+                     scrollable="true"
+                     scrollWidth="70%">
+            <p:column headerText="ID" style="text-align:center;" width="100">#{m.id}</p:column>
+            <p:column headerText="Название" style="text-align:center;" width="200"> #{m.name}</p:column>
+            <p:column headerText="Координаты" style="text-align:center;" width="200"> (#{m.coordinates.x},
+                #{m.coordinates.y})
+            </p:column>
+            <p:column headerText="Дата создания" style="text-align:center;" width="200"> #{m.creationDate}</p:column>
+            <p:column headerText="Оскары" style="text-align:center;" width="100">#{m.oscarsCount}</p:column>
+            <p:column headerText="Бюджет" style="text-align:center;" width="200">#{m.budget}</p:column>
+            <p:column headerText="Общие кассовые сборы" style="text-align:center;" width="200">#{m.totalBoxOffice}
+            </p:column>
+            <p:column headerText="Рейтинг MPAA" style="text-align:center;" width="200">#{m.mpaaRating}</p:column>
+            <p:column headerText="Режиссёр" style="text-align:center;" width="200"> #{m.director.name}</p:column>
+            <p:column headerText="Сценарист" style="text-align:center;" width="200">#{m.screenwriter.name}</p:column>
+            <p:column headerText="Оператор" style="text-align:center;" width="200">#{m.operator.name}</p:column>
+            <p:column headerText="Продолжительность" style="text-align:center;" width="200">#{m.length}</p:column>
+            <p:column headerText="Золотые пальмовые ветки" style="text-align:center;" width="100">#{m.goldenPalmCount}
+            </p:column>
+            <p:column headerText="Кассовые сборы в США" style="text-align:center;" width="200">#{m.usaBoxOffice}
+            </p:column>
+            <p:column headerText="Жанр" style="text-align:center;" width="200">#{m.genre}</p:column>
+        </p:dataTable>
+    </div>
+
+    <h2>Список людей:</h2>
+    <div class="table-container">
+        <div class="table-settings">
+            <h3>Фильтры:</h3>
+            <h:form class="filterForm">
+                <h:panelGrid columns="2" cellpadding="8" style="width:100%">
+                    <h:outputLabel for="nameFilter" value="Имя:" style="text-align:right;"/>
+                    <p:inputText id="nameFilter" value="#{personBean.nameFilter}" required="false"/>
+
+                    <h:outputLabel for="eyeColorFilter" value="Цвет глаз:" style="text-align:right;"/>
+                    <p:inputText id="eyeColorFilter" value="#{personBean.eyeColorFilter}" required="false"/>
+
+                    <h:outputLabel for="hairColorFilter" value="Цвет волос:" style="text-align:right;"/>
+                    <p:inputText id="hairColorFilter" value="#{personBean.hairColorFilter}" required="false"/>
+
+                    <h:outputLabel for="passportIDFilter" value="PassportID:" style="text-align:right;"/>
+                    <p:inputText id="passportIDFilter" value="#{personBean.passportIDFilter}" required="false"/>
+
+                    <p:commandButton value="Применить фильтры" action="#{personBean.applyFilters()}"
+                                     update="personTable"/>
+                    <p:commandButton value="Сбросить фильтры" action="#{personBean.removeFilters()}"
+                                     update="personTable"/>
+                </h:panelGrid>
+            </h:form>
+
+            <h:form class="sortForm">
+                <h:panelGrid columns="2" cellpadding="8" style="width:100%">
+                    <h3>Сортировка:</h3>
+                    <p:selectOneMenu id="sortPerson"
+                                     value="#{personBean.sortByColumn}"
+                                     required="false">
+                        <f:selectItems value="#{personBean.sortColumns}"
+                                       var="columnName"
+                                       itemValue="#{columnName}"
+                                       itemLabel="#{columnName}"/>
+
+                        <!-- Когда пользователь меняет значение -->
+                        <p:ajax event="change"
+                                listener="#{personBean.applySort}"
+                                update="personTable"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+            </h:form>
+        </div>
+        <p:dataTable id="personTable"
+                     class="data-table"
+                     value="#{personBean.filteredPersonList}"
+                     var="p"
+                     paginator="true"
+                     rows="5"
+                     scrollable="true"
+                     scrollWidth="70%">
+            <p:column headerText="ID" style="text-align:center;" width="100">#{p.id}</p:column>
+            <p:column headerText="Имя"
+                      style="text-align:center;"
+                      width="200">
+                #{p.name}
+            </p:column>
+            <p:column headerText="Цвет глаз"
+                      style="text-align:center;" width="200"> #{p.eyeColor}
+            </p:column>
+            <p:column headerText="Цвет волос"
+                      style="text-align:center;" width="200"> #{p.hairColor}
+            </p:column>
+            <p:column headerText="Локация" style="text-align:center;" width="200">(#{p.location.x}, #{p.location.y},
+                #{p.location.z})
+            </p:column>
+            <p:column headerText="Дата рождения" style="text-align:center;" width="200">#{p.birthday}</p:column>
+            <p:column headerText="Вес" style="text-align:center;" width="200">#{p.weight}</p:column>
+            <p:column headerText="passportID"
+                      style="text-align:center;" width="200">
+                #{p.passportID}
+            </p:column>
+        </p:dataTable>
+    </div>
+
+    <h2>Список локаций:</h2>
+    <p:dataTable id="locationTable"
+                 class="data-table"
+                 value="#{locationBean.locationList}"
+                 var="l"
+                 paginator="true"
+                 rows="5"
+                 scrollable="true"
+                 scrollWidth="90%">
+        <p:column headerText="ID" style="text-align:center;" width="10%">#{l.id}</p:column>
+        <p:column headerText="X" style="text-align:center;" width="30%"> #{l.x}</p:column>
+        <p:column headerText="Y" style="text-align:center;" width="30%"> #{l.y}</p:column>
+        <p:column headerText="Z" style="text-align:center;" width="30%"> #{l.z}</p:column>
+    </p:dataTable>
+
+    <h2>Список координат:</h2>
+    <p:dataTable id="coordinatesTable"
+                 class="data-table"
+                 value="#{coordinatesBean.coordinatesList}"
+                 var="c"
+                 paginator="true"
+                 rows="5"
+                 scrollable="true"
+                 scrollWidth="90%">
+        <p:column headerText="ID" style="text-align:center;" width="20%">#{c.id}</p:column>
+        <p:column headerText="X" style="text-align:center;" width="40%"> #{c.x}</p:column>
+        <p:column headerText="Y" style="text-align:center;" width="40%"> #{c.y}</p:column>
+    </p:dataTable>
+</h:body>
+
+</html>
