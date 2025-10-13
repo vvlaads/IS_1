@@ -1,6 +1,6 @@
 package lab.data;
 
-import lab.enums.Color;
+import lab.data.enums.Color;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;

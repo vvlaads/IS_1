@@ -1,7 +1,7 @@
 package lab.data;
 
-import lab.enums.MovieGenre;
-import lab.enums.MpaaRating;
+import lab.data.enums.MovieGenre;
+import lab.data.enums.MpaaRating;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;

@@ -2,7 +2,7 @@ package lab.beans;
 
 import lab.data.Person;
 import lab.database.DatabaseManager;
-import lab.enums.Color;
+import lab.data.enums.Color;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

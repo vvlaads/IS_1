@@ -3,27 +3,27 @@ h2 {
 }
 
 .data-table {
-        display: block;
-        justify-items: center;
+    display: block;
+    justify-items: center;
 }
 
 .table-container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    gap: 40px; /* расстояние между фильтрами и таблицей */
-    margin: 20px 40px; /* отступы вокруг блока */
+    gap: 40px;
+    margin: 20px 40px;
 }
 
 .table-settings {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* расстояние между секциями фильтра и сортировки */
+    gap: 20px;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    min-width: 300px; /* чтобы форма не сжималась слишком сильно */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
 }
 
 .table-settings h3 {
@@ -37,10 +37,10 @@ h2 {
 }
 
 .data-table {
-    flex-grow: 1; /* таблица занимает всё оставшееся место */
+    flex-grow: 1;
     background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 10px;
 }
 

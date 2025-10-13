@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+
 <h:head>
     <title>IS_1</title>
     <h:outputStylesheet name="styles.css"/>
@@ -8,6 +9,10 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{navigationBean.markPage('index')}"/>
+    </f:metadata>
+
     <header>
         <span id="student-name" class="student-info"> Силинцев Владислав Витальевич</span>
         <span id="student-group" class="student-info">P3314</span>
@@ -16,15 +21,29 @@
 
     <h:form>
         <p:menubar>
-            <p:menuitem value="Главная" icon="pi pi-home" outcome="index.xhtml?faces-redirect=true" ajax="false"/>
-            <p:menuitem value="Добавить фильм" icon="pi pi-video" outcome="addMovie.xhtml?faces-redirect=true"
+            <p:menuitem value="Главная" icon="pi pi-home"
+                        outcome="/index"
+                        styleClass="#{navigationBean.currentPage eq 'index' ? 'active-menu' : ''}"
                         ajax="false"/>
-            <p:menuitem value="Добавить человека" icon="pi pi-user" outcome="addPerson.xhtml?faces-redirect=true"
+            <p:menuitem value="Добавить фильм" icon="pi pi-video"
+                        outcome="/addMovie"
+                        styleClass="#{navigationBean.currentPage eq 'addMovie' ? 'active-menu' : ''}"
                         ajax="false"/>
-            <p:menuitem value="Добавить локацию" icon="pi pi-map-marker" outcome="addLocation.xhtml?faces-redirect=true"
+            <p:menuitem value="Добавить человека" icon="pi pi-user"
+                        outcome="/addPerson"
+                        styleClass="#{navigationBean.currentPage eq 'addPerson' ? 'active-menu' : ''}"
+                        ajax="false"/>
+            <p:menuitem value="Добавить локацию" icon="pi pi-map-marker"
+                        outcome="/addLocation"
+                        styleClass="#{navigationBean.currentPage eq 'addLocation' ? 'active-menu' : ''}"
                         ajax="false"/>
             <p:menuitem value="Добавить координаты" icon="pi pi-compass"
-                        outcome="addCoordinates.xhtml?faces-redirect=true"
+                        outcome="/addCoordinates"
+                        styleClass="#{navigationBean.currentPage eq 'addCoordinates' ? 'active-menu' : ''}"
+                        ajax="false"/>
+            <p:menuitem value="Поиск по ID" icon="pi pi-search"
+                        outcome="/searchByID"
+                        styleClass="#{navigationBean.currentPage eq 'searchByID' ? 'active-menu' : ''}"
                         ajax="false"/>
         </p:menubar>
     </h:form>
@@ -85,8 +104,10 @@
             </p:column>
             <p:column headerText="Дата создания" style="text-align:center;" width="200"> #{m.creationDate}</p:column>
             <p:column headerText="Оскары" style="text-align:center;" width="100">#{m.oscarsCount}</p:column>
-            <p:column headerText="Бюджет" style="text-align:center;" width="200">#{m.budget}</p:column>
-            <p:column headerText="Общие кассовые сборы" style="text-align:center;" width="200">#{m.totalBoxOffice}
+            <p:column headerText="Бюджет" style="text-align:center;" width="200">#{formatBean.formatMoney(m.budget)} $
+            </p:column>
+            <p:column headerText="Общие кассовые сборы" style="text-align:center;" width="200">
+                #{formatBean.formatMoney(m.totalBoxOffice)} $
             </p:column>
             <p:column headerText="Рейтинг MPAA" style="text-align:center;" width="200">#{m.mpaaRating}</p:column>
             <p:column headerText="Режиссёр" style="text-align:center;" width="200"> #{m.director.name}</p:column>
@@ -95,7 +116,8 @@
             <p:column headerText="Продолжительность" style="text-align:center;" width="200">#{m.length}</p:column>
             <p:column headerText="Золотые пальмовые ветки" style="text-align:center;" width="100">#{m.goldenPalmCount}
             </p:column>
-            <p:column headerText="Кассовые сборы в США" style="text-align:center;" width="200">#{m.usaBoxOffice}
+            <p:column headerText="Кассовые сборы в США" style="text-align:center;" width="200">
+                #{formatBean.formatMoney(m.usaBoxOffice)} $
             </p:column>
             <p:column headerText="Жанр" style="text-align:center;" width="200">#{m.genre}</p:column>
         </p:dataTable>

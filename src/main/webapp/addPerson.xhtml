@@ -10,6 +10,10 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{navigationBean.markPage('addPerson')}"/>
+    </f:metadata>
+
     <header>
         <span class="student-info">Силинцев Владислав Витальевич</span>
         <span class="student-info">P3314</span>
@@ -18,15 +22,30 @@
 
     <h:form>
         <p:menubar>
-            <p:menuitem value="Главная" icon="pi pi-home" outcome="index.xhtml?faces-redirect=true" ajax="false"/>
-            <p:menuitem value="Добавить фильм" icon="pi pi-video" outcome="addMovie.xhtml?faces-redirect=true"
+            <p:menuitem value="Главная" icon="pi pi-home"
+                        outcome="/index"
+                        styleClass="#{navigationBean.currentPage eq 'index' ? 'active-menu' : ''}"
                         ajax="false"/>
-            <p:menuitem value="Добавить человека" icon="pi pi-user" outcome="addPerson.xhtml?faces-redirect=true"
+            <p:menuitem value="Добавить фильм" icon="pi pi-video"
+                        outcome="/addMovie"
+                        styleClass="#{navigationBean.currentPage eq 'addMovie' ? 'active-menu' : ''}"
                         ajax="false"/>
-            <p:menuitem value="Добавить локацию" icon="pi pi-map-marker" outcome="addLocation.xhtml?faces-redirect=true"
+            <p:menuitem value="Добавить человека" icon="pi pi-user"
+                        outcome="/addPerson"
+                        styleClass="#{navigationBean.currentPage eq 'addPerson' ? 'active-menu' : ''}"
+                        ajax="false"/>
+            <p:menuitem value="Добавить локацию" icon="pi pi-map-marker"
+                        outcome="/addLocation"
+                        styleClass="#{navigationBean.currentPage eq 'addLocation' ? 'active-menu' : ''}"
                         ajax="false"/>
             <p:menuitem value="Добавить координаты" icon="pi pi-compass"
-                        outcome="addCoordinates.xhtml?faces-redirect=true" ajax="false"/>
+                        outcome="/addCoordinates"
+                        styleClass="#{navigationBean.currentPage eq 'addCoordinates' ? 'active-menu' : ''}"
+                        ajax="false"/>
+            <p:menuitem value="Поиск по ID" icon="pi pi-search"
+                        outcome="/searchByID"
+                        styleClass="#{navigationBean.currentPage eq 'searchByID' ? 'active-menu' : ''}"
+                        ajax="false"/>
         </p:menubar>
     </h:form>
 

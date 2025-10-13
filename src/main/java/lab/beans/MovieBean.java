@@ -1,10 +1,9 @@
 package lab.beans;
 
 import lab.data.Movie;
-import lab.data.Person;
 import lab.database.DatabaseManager;
-import lab.enums.MovieGenre;
-import lab.enums.MpaaRating;
+import lab.data.enums.MovieGenre;
+import lab.data.enums.MpaaRating;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -77,10 +76,12 @@ public class MovieBean {
                 .filter(m -> genreFilter == null || genreFilter.isEmpty() ||
                         (m.getGenre() != null && m.getGenre().name().equalsIgnoreCase(genreFilter)))
                 .collect(Collectors.toList());
+        applySort();
     }
 
     public void removeFilters() {
         filteredMovieList = movieList;
+        applySort();
     }
 
     public void applySort() {
@@ -110,9 +111,6 @@ public class MovieBean {
 
 
     public List<Movie> getMovieList() {
-        if (movieList == null) {
-            movieList = databaseManager.getMovieList();
-        }
         return movieList;
     }
 

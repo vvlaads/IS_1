@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
-
 <h:head>
-    <title>Поиск по ID</title>
+    <title>Информация о координатах</title>
     <h:outputStylesheet name="styles.css"/>
-    <h:outputStylesheet name="search.css"/>
+    <h:outputStylesheet name="profiles.css"/>
 </h:head>
 
 <h:body>
     <f:metadata>
-        <f:event type="preRenderView" listener="#{navigationBean.markPage('searchByID')}"/>
+        <f:viewParam name="id" value="#{coordinatesProfileBean.id}"/>
     </f:metadata>
 
     <header>
-        <span id="student-name" class="student-info">Силинцев Владислав Витальевич</span>
+        <span id="student-name" class="student-info"> Силинцев Владислав Витальевич</span>
         <span id="student-group" class="student-info">P3314</span>
         <span id="student-id" class="student-info">355273</span>
     </header>
@@ -48,30 +47,16 @@
         </p:menubar>
     </h:form>
 
-    <div class="search-container">
-        <h2>Поиск объекта по ID</h2>
-        <p class="subtitle">Выберите тип объекта и введите его идентификатор</p>
+    <h:panelGroup rendered="#{coordinatesProfileBean.coordinates != null}" columns="2">
+        <h:outputLabel value="X:"/>
+        <h:outputLabel value="#{coordinatesProfileBean.coordinates.x}" style="text-align:right;"/>
 
-        <h:form styleClass="search-form">
-            <h:panelGrid columns="2" columnClasses="label,field" cellpadding="8">
-                <h:outputLabel for="className" value="Тип объекта:"/>
-                <p:selectOneMenu id="className" value="#{searchBean.className}" required="true"
-                                 styleClass="input-field" style="width:200px;">
-                    <f:selectItems value="#{searchBean.classNameList}" var="name" itemValue="#{name}"
-                                   itemLabel="#{name}"/>
-                </p:selectOneMenu>
+        <h:outputLabel value="Y:"/>
+        <h:outputLabel value="#{coordinatesProfileBean.coordinates.y}" style="text-align:right;"/>
+    </h:panelGroup>
 
-                <h:outputLabel for="ID_value" value="ID:"/>
-                <p:inputText id="ID_value" value="#{searchBean.id}" required="true" placeholder="Введите ID"
-                             styleClass="input-field" style="width:200px;"/>
-            </h:panelGrid>
-
-            <div class="button-wrapper">
-                <p:commandButton value="Найти" icon="pi pi-search" action="#{searchBean.findByID}" ajax="false"
-                                 styleClass="search-button"/>
-            </div>
-        </h:form>
-    </div>
+    <h:panelGroup rendered="#{coordinatesProfileBean.coordinates == null}">
+        <h:outputText value="Координаты не найдены"/>
+    </h:panelGroup>
 </h:body>
-
 </html>

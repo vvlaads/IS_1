@@ -19,7 +19,7 @@ public class RedirectBean {
                 page += ".xhtml";
             }
 
-            // добавим параметры
+            // Параметры
             if (query != null && !query.isEmpty()) {
                 page += "?" + query;
             }
@@ -31,19 +31,19 @@ public class RedirectBean {
     }
 
     public void toMovie(int id) {
-        redirectTo("profiles/movie.xhtml", "id=" + id);
+        redirectTo("profiles/movie", "id=" + id);
     }
 
     public void toPerson(int id) {
-        redirectTo("person", "id=" + id);
+        redirectTo("profiles/person", "id=" + id);
     }
 
     public void toLocation(int id) {
-        redirectTo("location", "id=" + id);
+        redirectTo("profiles/location", "id=" + id);
     }
 
     public void toCoordinates(int id) {
-        redirectTo("profiles/coordinates.xhtml", "id=" + id);
+        redirectTo("profiles/coordinates", "id=" + id);
     }
 }
 

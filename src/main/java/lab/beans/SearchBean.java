@@ -24,7 +24,6 @@ public class SearchBean {
     }
 
     public void findByID() {
-
         switch (className) {
             case "Movie":
                 redirectBean.toMovie(id);

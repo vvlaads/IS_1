@@ -1,4 +1,4 @@
-package lab.enums;
+package lab.data.enums;
 
 public enum MpaaRating {
     PG_13,
