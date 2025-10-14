@@ -1,20 +1,20 @@
-package lab.beans.profile;
+package lab.beans.profiles;
 
-import lab.data.Coordinates;
+import lab.data.Person;
 import lab.database.DatabaseManager;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-@ManagedBean(name = "coordinatesProfileBean")
+@ManagedBean(name = "personProfileBean")
 @SessionScoped
-public class CoordinatesProfileBean {
+public class PersonProfileBean {
     @EJB
     private DatabaseManager databaseManager;
 
     private int id;
-    private Coordinates coordinates;
+    private Person person;
 
     public int getId() {
         return id;
@@ -22,10 +22,10 @@ public class CoordinatesProfileBean {
 
     public void setId(int id) {
         this.id = id;
-        coordinates = databaseManager.getCoordinatesById(id);
+        person = databaseManager.getPersonById(id);
     }
 
-    public Coordinates getCoordinates() {
-        return coordinates;
+    public Person getPerson() {
+        return person;
     }
 }

@@ -47,16 +47,26 @@
         </p:menubar>
     </h:form>
 
-    <h:panelGroup rendered="#{coordinatesProfileBean.coordinates != null}" columns="2">
-        <h:outputLabel value="X:"/>
-        <h:outputLabel value="#{coordinatesProfileBean.coordinates.x}" style="text-align:right;"/>
+    <h:form>
+        <h:panelGroup rendered="#{coordinatesProfileBean.coordinates != null}" layout="block"
+                      styleClass="object-profile-card">
 
-        <h:outputLabel value="Y:"/>
-        <h:outputLabel value="#{coordinatesProfileBean.coordinates.y}" style="text-align:right;"/>
-    </h:panelGroup>
+            <h2 class="object-title">Координаты</h2>
+            <p class="object-id">ID: #{coordinatesProfileBean.coordinates.id}</p>
 
-    <h:panelGroup rendered="#{coordinatesProfileBean.coordinates == null}">
-        <h:outputText value="Координаты не найдены"/>
-    </h:panelGroup>
+            <div class="object-info-columns">
+                <div class="object-column">
+                    <h3>Общее</h3>
+                    <p><strong>X:</strong> #{coordinatesProfileBean.coordinates.x}</p>
+                    <p><strong>Y:</strong> #{coordinatesProfileBean.coordinates.y}</p>
+                </div>
+            </div>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{coordinatesProfileBean.coordinates == null}">
+            <h2 class="no-data">Координаты не найдены</h2>
+        </h:panelGroup>
+    </h:form>
+
 </h:body>
 </html>

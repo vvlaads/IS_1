@@ -1,24 +1,20 @@
-package lab.beans.profile;
+package lab.beans.profiles;
 
-import lab.data.Movie;
+import lab.data.Coordinates;
 import lab.database.DatabaseManager;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-@ManagedBean(name = "movieProfileBean")
+@ManagedBean(name = "coordinatesProfileBean")
 @SessionScoped
-public class MovieProfileBean {
+public class CoordinatesProfileBean {
     @EJB
     private DatabaseManager databaseManager;
 
-    private Movie movie;
     private int id;
-
-    public Movie getMovie() {
-        return movie;
-    }
+    private Coordinates coordinates;
 
     public int getId() {
         return id;
@@ -26,6 +22,10 @@ public class MovieProfileBean {
 
     public void setId(int id) {
         this.id = id;
-        movie = databaseManager.getMovieById(id);
+        coordinates = databaseManager.getCoordinatesById(id);
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 }

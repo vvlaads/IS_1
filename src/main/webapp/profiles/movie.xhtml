@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
 <h:head>
-    <title>Информация о координатах</title>
+    <title>Информация о фильме</title>
     <h:outputStylesheet name="styles.css"/>
     <h:outputStylesheet name="profiles.css"/>
 </h:head>
@@ -48,14 +48,15 @@
     </h:form>
 
     <h:form>
-        <h:panelGroup rendered="#{movieProfileBean.movie != null}" layout="block" styleClass="movie-profile-card">
+        <h:panelGroup rendered="#{movieProfileBean.movie != null}" layout="block" styleClass="object-profile-card">
 
-            <h2 class="movie-title">#{movieProfileBean.movie.name}</h2>
-            <p class="movie-id">ID: #{movieProfileBean.movie.id}</p>
+            <h2 class="object-title">Фильм</h2>
+            <p class="object-id">ID: #{movieProfileBean.movie.id}</p>
 
-            <div class="movie-info-columns">
-                <div class="movie-column">
+            <div class="object-info-columns">
+                <div class="object-column">
                     <h3>Общее</h3>
+                    <p><strong>Название:</strong> #{movieProfileBean.movie.name}</p>
                     <p><strong>Продолжительность:</strong> #{movieProfileBean.movie.length} мин</p>
                     <p><strong>Жанр:</strong> #{movieProfileBean.movie.genre}</p>
                     <p><strong>MPAA:</strong> #{movieProfileBean.movie.mpaaRating}</p>
@@ -67,7 +68,7 @@
                     <p><strong>Дата создания:</strong> #{movieProfileBean.movie.creationDate}</p>
                 </div>
 
-                <div class="movie-column">
+                <div class="object-column">
                     <h3>Финансы</h3>
                     <p><strong>Бюджет:</strong>
                         #{formatBean.formatMoney(movieProfileBean.movie.budget)} $</p>
@@ -78,8 +79,8 @@
                 </div>
             </div>
 
-            <div class="movie-info-columns">
-                <div class="movie-column person-card">
+            <div class="object-info-columns">
+                <div class="object-column subclass-card">
                     <h3>Режиссёр</h3>
                     <p><strong>ID:</strong> #{movieProfileBean.movie.director.id}</p>
                     <p><strong>Имя:</strong> #{movieProfileBean.movie.director.name}</p>
@@ -94,7 +95,7 @@
                     <p><strong>Паспорт:</strong> #{movieProfileBean.movie.director.passportID}</p>
                 </div>
 
-                <div class="movie-column person-card">
+                <div class="object-column subclass-card">
                     <h3>Сценарист</h3>
                     <p><strong>ID:</strong> #{movieProfileBean.movie.screenwriter.id}</p>
                     <p><strong>Имя:</strong> #{movieProfileBean.movie.screenwriter.name}</p>
@@ -109,7 +110,7 @@
                     <p><strong>Паспорт:</strong> #{movieProfileBean.movie.screenwriter.passportID}</p>
                 </div>
 
-                <div class="movie-column person-card">
+                <div class="object-column subclass-card">
                     <h3>Оператор</h3>
                     <p><strong>ID:</strong> #{movieProfileBean.movie.operator.id}</p>
                     <p><strong>Имя:</strong> #{movieProfileBean.movie.operator.name}</p>
