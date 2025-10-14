@@ -88,6 +88,35 @@ public class DatabaseManager {
         }
     }
 
+    public void updatePerson(Person person) {
+        if (!validator.validatePerson(person)) {
+            System.err.println("Illegal arguments for Person: " + person);
+            return;
+        }
+
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Person existingPerson = em.find(Person.class, person.getId());
+            if (existingPerson == null) {
+                System.err.println("Person not found with id: " + person.getId());
+                transaction.rollback();
+                return;
+            }
+
+            em.merge(person);
+            transaction.commit();
+            System.out.println("Person updated successfully: " + person);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Person update ERROR: " + e);
+        }
+    }
+
     public void addLocation(Location location) {
         if (validator.validateLocation(location)) {
             EntityTransaction transaction = em.getTransaction();
@@ -107,6 +136,35 @@ public class DatabaseManager {
         }
     }
 
+    public void updateLocation(Location location) {
+        if (!validator.validateLocation(location)) {
+            System.err.println("Illegal arguments for Location: " + location);
+            return;
+        }
+
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Location existingLocation = em.find(Location.class, location.getId());
+            if (existingLocation == null) {
+                System.err.println("Location not found with id: " + location.getId());
+                transaction.rollback();
+                return;
+            }
+
+            em.merge(location);
+            transaction.commit();
+            System.out.println("Location updated successfully: " + location);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Location update ERROR: " + e);
+        }
+    }
+
     public void addCoordinates(Coordinates coordinates) {
         if (validator.validateCoordinates(coordinates)) {
             EntityTransaction transaction = em.getTransaction();
@@ -123,6 +181,35 @@ public class DatabaseManager {
             }
         } else {
             System.err.println("Illegal arguments for Coordinates: " + coordinates);
+        }
+    }
+
+    public void updateCoordinates(Coordinates coordinates) {
+        if (!validator.validateCoordinates(coordinates)) {
+            System.err.println("Illegal arguments for Coordinates: " + coordinates);
+            return;
+        }
+
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Coordinates existingCoordinates = em.find(Coordinates.class, coordinates.getId());
+            if (existingCoordinates == null) {
+                System.err.println("Coordinates not found with id: " + coordinates.getId());
+                transaction.rollback();
+                return;
+            }
+
+            em.merge(coordinates);
+            transaction.commit();
+            System.out.println("Coordinates updated successfully: " + coordinates);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Coordinates update ERROR: " + e);
         }
     }
 

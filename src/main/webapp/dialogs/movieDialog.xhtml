@@ -8,7 +8,9 @@
     </h:head>
 
     <p:dialog header="#{movieDialogBean.editing ? 'Редактировать фильм' : 'Добавить фильм'}"
-              widgetVar="movieDialog" modal="true" closable="true">
+              widgetVar="movieDialog"
+              modal="true"
+              closable="true">
         <div class="form-container">
             <h:form id="movieDialogForm">
                 <h:panelGrid columns="4" columnClasses="labelCol,fieldCol" cellpadding="8" style="width:100%">

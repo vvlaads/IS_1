@@ -1,4 +1,4 @@
-.search-container {
+.find-container {
     max-width: 500px;
     margin: 80px auto;
     padding: 40px 30px;
@@ -8,7 +8,7 @@
     text-align: center;
 }
 
-.search-container h2 {
+.find-container h2 {
     color: #2c3e50;
     font-size: 28px;
     margin-bottom: 10px;
@@ -19,14 +19,14 @@
     margin-bottom: 25px;
 }
 
-.search-form .label {
+.find-form .label {
     text-align: right;
     font-weight: 600;
     color: #333;
     padding-right: 10px;
 }
 
-.search-form .field {
+.find-form .field {
     text-align: left;
 }
 
@@ -34,10 +34,10 @@
     margin-top: 30px;
 }
 
-.search-button {
+.find-button {
     font-weight: 700;
 }
 
-.search-form .ui-panelgrid-row {
+.find-form .ui-panelgrid-row {
     margin-bottom: 15px;
 }

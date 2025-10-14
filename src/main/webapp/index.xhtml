@@ -16,48 +16,9 @@
         <f:event type="preRenderView" listener="#{navigationBean.markPage('index')}"/>
     </f:metadata>
 
-    <header>
-        <span id="student-name" class="student-info"> Силинцев Владислав Витальевич</span>
-        <span id="student-group" class="student-info">P3314</span>
-        <span id="student-id" class="student-info">355273</span>
-    </header>
-
-    <h:form>
-        <p:menubar>
-            <p:menuitem value="Главная" icon="pi pi-home"
-                        outcome="/index"
-                        styleClass="#{navigationBean.currentPage eq 'index' ? 'active-menu' : ''}"
-                        ajax="false"/>
-            <p:menuitem value="Добавить фильм" icon="pi pi-video"
-                        outcome="/addMovie"
-                        styleClass="#{navigationBean.currentPage eq 'addMovie' ? 'active-menu' : ''}"
-                        ajax="false"/>
-            <p:menuitem value="Добавить человека" icon="pi pi-user"
-                        outcome="/addPerson"
-                        styleClass="#{navigationBean.currentPage eq 'addPerson' ? 'active-menu' : ''}"
-                        ajax="false"/>
-            <p:menuitem value="Добавить локацию" icon="pi pi-map-marker"
-                        outcome="/addLocation"
-                        styleClass="#{navigationBean.currentPage eq 'addLocation' ? 'active-menu' : ''}"
-                        ajax="false"/>
-            <p:menuitem value="Добавить координаты" icon="pi pi-compass"
-                        outcome="/addCoordinates"
-                        styleClass="#{navigationBean.currentPage eq 'addCoordinates' ? 'active-menu' : ''}"
-                        ajax="false"/>
-            <p:menuitem value="Поиск по ID" icon="pi pi-search"
-                        outcome="/searchByID"
-                        styleClass="#{navigationBean.currentPage eq 'searchByID' ? 'active-menu' : ''}"
-                        ajax="false"/>
-            <p:menuitem value="Добавить" icon="pi pi-plus"
-                        outcome="/addObject"
-                        styleClass="#{navigationBean.currentPage eq 'searchByID' ? 'active-menu' : ''}"
-                        ajax="false"/>
-        </p:menubar>
-    </h:form>
+    <ui:include src="/templates/topMenu.xhtml"/>
 
     <h2>Список фильмов:</h2>
-    <ui:include src="/dialogs/movieDialog.xhtml"/>
-
     <div class="table-container">
         <div class="table-settings">
             <h3>Фильтры:</h3>
@@ -107,7 +68,7 @@
                          rows="5"
                          scrollable="true"
                          scrollWidth="100%">
-                <p:column headerText="Действие" style="text-align:center;" width="100">
+                <p:column headerText="Действие" style="text-align:center;" width="200">
                     <p:commandButton value="Редактировать"
                                      actionListener="#{movieDialogBean.openEditDialog(m.id)}"
                                      oncomplete="PF('movieDialog').show();"
@@ -196,6 +157,12 @@
                      rows="5"
                      scrollable="true"
                      scrollWidth="70%">
+            <p:column headerText="Действие" style="text-align:center;" width="200">
+                <p:commandButton value="Редактировать"
+                                 actionListener="#{personDialogBean.openEditDialog(p.id)}"
+                                 oncomplete="PF('personDialog').show();"
+                                 update=":personDialogForm"/>
+            </p:column>
             <p:column headerText="ID" style="text-align:center;" width="100">#{p.id}</p:column>
             <p:column headerText="Имя"
                       style="text-align:center;"
@@ -248,6 +215,11 @@
         <p:column headerText="X" style="text-align:center;" width="40%"> #{c.x}</p:column>
         <p:column headerText="Y" style="text-align:center;" width="40%"> #{c.y}</p:column>
     </p:dataTable>
+
+    <ui:include src="/dialogs/movieDialog.xhtml"/>
+    <ui:include src="/dialogs/personDialog.xhtml"/>
+    <ui:include src="/dialogs/locationDialog.xhtml"/>
+    <ui:include src="/dialogs/coordinatesDialog.xhtml"/>
 </h:body>
 
 </html>
