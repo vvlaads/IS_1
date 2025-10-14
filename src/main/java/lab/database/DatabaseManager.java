@@ -39,6 +39,36 @@ public class DatabaseManager {
         }
     }
 
+    public void updateMovie(Movie movie) {
+        if (!validator.validateMovie(movie)) {
+            System.err.println("Illegal arguments for Movie: " + movie);
+            return;
+        }
+
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Movie existingMovie = em.find(Movie.class, movie.getId());
+            if (existingMovie == null) {
+                System.err.println("Movie not found with id: " + movie.getId());
+                transaction.rollback();
+                return;
+            }
+
+            em.merge(movie);
+            transaction.commit();
+            System.out.println("Movie updated successfully: " + movie);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Movie update ERROR: " + e);
+        }
+    }
+
+
     public void addPerson(Person person) {
         if (validator.validatePerson(person)) {
             EntityTransaction transaction = em.getTransaction();

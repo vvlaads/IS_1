@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <title>IS_1</title>
@@ -45,10 +48,16 @@
                         outcome="/searchByID"
                         styleClass="#{navigationBean.currentPage eq 'searchByID' ? 'active-menu' : ''}"
                         ajax="false"/>
+            <p:menuitem value="Добавить" icon="pi pi-plus"
+                        outcome="/addObject"
+                        styleClass="#{navigationBean.currentPage eq 'searchByID' ? 'active-menu' : ''}"
+                        ajax="false"/>
         </p:menubar>
     </h:form>
 
     <h2>Список фильмов:</h2>
+    <ui:include src="/dialogs/movieDialog.xhtml"/>
+
     <div class="table-container">
         <div class="table-settings">
             <h3>Фильтры:</h3>
@@ -63,10 +72,10 @@
                     <h:outputLabel for="genreFilter" value="Жанр:" style="text-align:right;"/>
                     <p:inputText id="genreFilter" value="#{movieBean.genreFilter}" required="false"/>
 
-                    <p:commandButton value="Применить фильтры" action="#{movieBean.applyFilters()}"
-                                     update="movieTable"/>
+                    <p:commandButton value="Применить фильтры" action="#{movieBean.applyFiltersAndSort()}"
+                                     update=":movieForm:movieTable"/>
                     <p:commandButton value="Сбросить фильтры" action="#{movieBean.removeFilters()}"
-                                     update="movieTable"/>
+                                     update=":movieForm:movieTable"/>
                 </h:panelGrid>
             </h:form>
 
@@ -83,44 +92,56 @@
 
                         <!-- Когда пользователь меняет значение -->
                         <p:ajax event="change"
-                                listener="#{movieBean.applySort}"
-                                update="movieTable"/>
+                                listener="#{movieBean.applyFiltersAndSort}"
+                                update=":movieForm:movieTable"/>
                     </p:selectOneMenu>
                 </h:panelGrid>
             </h:form>
         </div>
-        <p:dataTable id="movieTable"
-                     class="data-table"
-                     value="#{movieBean.filteredMovieList}"
-                     var="m"
-                     paginator="true"
-                     rows="5"
-                     scrollable="true"
-                     scrollWidth="70%">
-            <p:column headerText="ID" style="text-align:center;" width="100">#{m.id}</p:column>
-            <p:column headerText="Название" style="text-align:center;" width="200"> #{m.name}</p:column>
-            <p:column headerText="Координаты" style="text-align:center;" width="200"> (#{m.coordinates.x},
-                #{m.coordinates.y})
-            </p:column>
-            <p:column headerText="Дата создания" style="text-align:center;" width="200"> #{m.creationDate}</p:column>
-            <p:column headerText="Оскары" style="text-align:center;" width="100">#{m.oscarsCount}</p:column>
-            <p:column headerText="Бюджет" style="text-align:center;" width="200">#{formatBean.formatMoney(m.budget)} $
-            </p:column>
-            <p:column headerText="Общие кассовые сборы" style="text-align:center;" width="200">
-                #{formatBean.formatMoney(m.totalBoxOffice)} $
-            </p:column>
-            <p:column headerText="Рейтинг MPAA" style="text-align:center;" width="200">#{m.mpaaRating}</p:column>
-            <p:column headerText="Режиссёр" style="text-align:center;" width="200"> #{m.director.name}</p:column>
-            <p:column headerText="Сценарист" style="text-align:center;" width="200">#{m.screenwriter.name}</p:column>
-            <p:column headerText="Оператор" style="text-align:center;" width="200">#{m.operator.name}</p:column>
-            <p:column headerText="Продолжительность" style="text-align:center;" width="200">#{m.length}</p:column>
-            <p:column headerText="Золотые пальмовые ветки" style="text-align:center;" width="100">#{m.goldenPalmCount}
-            </p:column>
-            <p:column headerText="Кассовые сборы в США" style="text-align:center;" width="200">
-                #{formatBean.formatMoney(m.usaBoxOffice)} $
-            </p:column>
-            <p:column headerText="Жанр" style="text-align:center;" width="200">#{m.genre}</p:column>
-        </p:dataTable>
+        <h:form id="movieForm" style="width: 75%;">
+            <p:dataTable id="movieTable"
+                         class="data-table"
+                         value="#{movieBean.filteredMovieList}"
+                         var="m"
+                         paginator="true"
+                         rows="5"
+                         scrollable="true"
+                         scrollWidth="100%">
+                <p:column headerText="Действие" style="text-align:center;" width="100">
+                    <p:commandButton value="Редактировать"
+                                     actionListener="#{movieDialogBean.openEditDialog(m.id)}"
+                                     oncomplete="PF('movieDialog').show();"
+                                     update=":movieDialogForm"/>
+                </p:column>
+                <p:column headerText="ID" style="text-align:center;" width="100">#{m.id}</p:column>
+                <p:column headerText="Название" style="text-align:center;" width="200"> #{m.name}</p:column>
+                <p:column headerText="Координаты" style="text-align:center;" width="200"> (#{m.coordinates.x},
+                    #{m.coordinates.y})
+                </p:column>
+                <p:column headerText="Дата создания" style="text-align:center;" width="200"> #{m.creationDate}
+                </p:column>
+                <p:column headerText="Оскары" style="text-align:center;" width="100">#{m.oscarsCount}</p:column>
+                <p:column headerText="Бюджет" style="text-align:center;" width="200">#{formatBean.formatMoney(m.budget)}
+                    $
+                </p:column>
+                <p:column headerText="Общие кассовые сборы" style="text-align:center;" width="200">
+                    #{formatBean.formatMoney(m.totalBoxOffice)} $
+                </p:column>
+                <p:column headerText="Рейтинг MPAA" style="text-align:center;" width="200">#{m.mpaaRating}</p:column>
+                <p:column headerText="Режиссёр" style="text-align:center;" width="200"> #{m.director.name}</p:column>
+                <p:column headerText="Сценарист" style="text-align:center;" width="200">#{m.screenwriter.name}
+                </p:column>
+                <p:column headerText="Оператор" style="text-align:center;" width="200">#{m.operator.name}</p:column>
+                <p:column headerText="Продолжительность" style="text-align:center;" width="200">#{m.length}</p:column>
+                <p:column headerText="Золотые пальмовые ветки" style="text-align:center;" width="100">
+                    #{m.goldenPalmCount}
+                </p:column>
+                <p:column headerText="Кассовые сборы в США" style="text-align:center;" width="200">
+                    #{formatBean.formatMoney(m.usaBoxOffice)} $
+                </p:column>
+                <p:column headerText="Жанр" style="text-align:center;" width="200">#{m.genre}</p:column>
+            </p:dataTable>
+        </h:form>
     </div>
 
     <h2>Список людей:</h2>

@@ -12,6 +12,7 @@ import javax.faces.bean.SessionScoped;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ManagedBean(name = "movieBean")
@@ -39,6 +40,12 @@ public class MovieBean {
     public void init() {
         movieList = databaseManager.getMovieList();
         filteredMovieList = movieList;
+        applySort();
+    }
+
+    public void update() {
+        movieList = databaseManager.getMovieList();
+        applyFiltersAndSort();
     }
 
     public String addMovie() {
@@ -51,7 +58,13 @@ public class MovieBean {
         return "index.xhtml";
     }
 
-    public void editMovie() {
+    public void editMovie(int id) {
+        movie = databaseManager.getMovieById(id);
+        System.out.println(movie);
+        movie.setBudget(12_000_000);
+        System.out.println(movie);
+        databaseManager.updateMovie(movie);
+        update();
     }
 
     public void deleteMovie() {
@@ -68,7 +81,12 @@ public class MovieBean {
         System.out.println("Cleaned Movie Form");
     }
 
-    public void applyFilters() {
+    public void applyFiltersAndSort() {
+        applyFilters();
+        applySort();
+    }
+
+    private void applyFilters() {
         filteredMovieList = movieList.stream()
                 .filter(m -> nameFilter == null || nameFilter.isEmpty() || m.getName().equals(nameFilter))
                 .filter(m -> mpaaRatingFilter == null || mpaaRatingFilter.isEmpty() ||
@@ -76,7 +94,6 @@ public class MovieBean {
                 .filter(m -> genreFilter == null || genreFilter.isEmpty() ||
                         (m.getGenre() != null && m.getGenre().name().equalsIgnoreCase(genreFilter)))
                 .collect(Collectors.toList());
-        applySort();
     }
 
     public void removeFilters() {
@@ -84,7 +101,14 @@ public class MovieBean {
         applySort();
     }
 
-    public void applySort() {
+    private void applySort() {
+        if (sortByColumn == null || sortByColumn.equals("Нет")) {
+            filteredMovieList = filteredMovieList.stream()
+                    .sorted(Comparator.comparing(Movie::getId))
+                    .collect(Collectors.toList());
+            return;
+        }
+
         switch (sortByColumn) {
             case "По названию":
                 filteredMovieList = filteredMovieList.stream()
