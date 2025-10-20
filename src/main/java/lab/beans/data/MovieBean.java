@@ -1,6 +1,7 @@
-package lab.beans.filters;
+package lab.beans.data;
 
-import lab.beans.data.MovieDataBean;
+import lab.beans.util.Updatable;
+import lab.beans.util.UpdateBean;
 import lab.data.Movie;
 import lab.database.DatabaseManager;
 
@@ -14,48 +15,47 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ManagedBean(name = "movieFilterBean")
+@ManagedBean(name = "movieBean")
 @SessionScoped
-public class MovieFilterBean {
+public class MovieBean implements Updatable {
     @EJB
     private DatabaseManager databaseManager;
-
-    private MovieDataBean movieDataBean;
     private List<Movie> filteredMovieList;
+
+    private UpdateBean updateBean;
+    private long lastKnownVersion = -1;
+
     private String nameFilter;
     private String mpaaRatingFilter;
     private String genreFilter;
+
     private String sortByColumn;
     private List<String> sortColumns = Arrays.asList("Нет", "По названию", "По рейтингу MPAA", "По жанру");
-    private long lastKnownVersion = -1; // Последняя известная версия данных
 
     @PostConstruct
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
-        movieDataBean = context.getApplication()
-                .evaluateExpressionGet(context, "#{movieDataBean}", MovieDataBean.class);
-        lastKnownVersion = movieDataBean.getVersion();
-        applyFiltersAndSort();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+        lastKnownVersion = updateBean.getVersion();
+        updateTable();
     }
 
-    // Этот метод будет вызываться периодически через polling
     public void checkForUpdates() {
-        long currentVersion = movieDataBean.getVersion();
+        long currentVersion = updateBean.getVersion();
         if (currentVersion != lastKnownVersion) {
-            // Данные изменились, обновляем
             lastKnownVersion = currentVersion;
-            applyFiltersAndSort();
+            updateTable();
         }
     }
 
-    public void update() {
+    public void updateTable() {
         applyFiltersAndSort();
     }
 
     public void deleteMovie(int id) {
-        movieDataBean.deleteMovie(id);
-        lastKnownVersion = movieDataBean.getVersion();
-        applyFiltersAndSort();
+        databaseManager.deleteMovie(id);
+        updateTable();
     }
 
     public void applyFiltersAndSort() {
@@ -64,7 +64,7 @@ public class MovieFilterBean {
     }
 
     private void applyFilters() {
-        List<Movie> allMovies = movieDataBean.getMovieList();
+        List<Movie> allMovies = databaseManager.getMovieList();
 
         filteredMovieList = allMovies.stream()
                 .filter(m -> nameFilter == null || nameFilter.isEmpty() ||

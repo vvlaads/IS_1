@@ -12,10 +12,9 @@
 </h:head>
 
 <h:body>
-    <!-- Polling - проверяет обновления каждые 3 секунды -->
     <p:poll interval="3"
-            update=":movieForm:movieTable"
-            listener="#{movieFilterBean.checkForUpdates}"
+            listener="#{updateController.checkAllUpdates}"
+            update=":movieForm:movieTable :personForm:personTable :locationForm:locationTable :coordinatesForm:coordinatesTable"
             global="false"/>
 
     <f:metadata>
@@ -50,16 +49,16 @@
                 <h:panelGrid columns="2" cellpadding="8" style="width:100%">
                     <h3>Сортировка:</h3>
                     <p:selectOneMenu id="sortMovie"
-                                     value="#{movieFilterBean.sortByColumn}"
+                                     value="#{movieBean.sortByColumn}"
                                      required="false">
-                        <f:selectItems value="#{movieFilterBean.sortColumns}"
+                        <f:selectItems value="#{movieBean.sortColumns}"
                                        var="columnName"
                                        itemValue="#{columnName}"
                                        itemLabel="#{columnName}"/>
 
                         <!-- Когда пользователь меняет значение -->
                         <p:ajax event="change"
-                                listener="#{movieFilterBean.applyFiltersAndSort}"
+                                listener="#{movieBean.applyFiltersAndSort}"
                                 update=":movieForm:movieTable"/>
                     </p:selectOneMenu>
                 </h:panelGrid>
@@ -68,7 +67,7 @@
         <h:form id="movieForm" style="width: 70%;">
             <p:dataTable id="movieTable"
                          class="data-table"
-                         value="#{movieFilterBean.filteredMovieList}"
+                         value="#{movieBean.filteredMovieList}"
                          var="m"
                          paginator="true"
                          rows="5"
@@ -85,7 +84,7 @@
                                          update=":movieDialogForm"/>
 
                         <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
-                                         action="#{movieFilterBean.deleteMovie(m.id)}"
+                                         action="#{movieBean.deleteMovie(m.id)}"
                                          update=":movieForm:movieTable"
                                          process="@this"
                                          onclick="if(!confirm('Вы уверены, что хотите удалить фильм \\'#{m.name}\\'?')) return false;"/>
@@ -143,9 +142,9 @@
                     <p:inputText id="passportIDFilter" value="#{personBean.passportIDFilter}" required="false"/>
 
                     <p:commandButton value="Применить фильтры" action="#{personBean.applyFilters()}"
-                                     update="personTable"/>
+                                     update=":personForm:personTable"/>
                     <p:commandButton value="Сбросить фильтры" action="#{personBean.removeFilters()}"
-                                     update="personTable"/>
+                                     update=":personForm:personTable"/>
                 </h:panelGrid>
             </h:form>
 
@@ -163,77 +162,94 @@
                         <!-- Когда пользователь меняет значение -->
                         <p:ajax event="change"
                                 listener="#{personBean.applySort}"
-                                update="personTable"/>
+                                update=":personForm:personTable"/>
                     </p:selectOneMenu>
                 </h:panelGrid>
             </h:form>
         </div>
-        <p:dataTable id="personTable"
-                     class="data-table"
-                     value="#{personBean.filteredPersonList}"
-                     var="p"
-                     paginator="true"
-                     rows="5"
-                     scrollable="true"
-                     scrollWidth="70%">
-            <p:column headerText="Действие" style="text-align:center;" width="200">
-                <p:commandButton value="Редактировать"
-                                 actionListener="#{personDialogBean.openEditDialog(p.id)}"
-                                 oncomplete="PF('personDialog').show();"
-                                 update=":personDialogForm"/>
-            </p:column>
-            <p:column headerText="ID" style="text-align:center;" width="100">#{p.id}</p:column>
-            <p:column headerText="Имя"
-                      style="text-align:center;"
-                      width="200">
-                #{p.name}
-            </p:column>
-            <p:column headerText="Цвет глаз"
-                      style="text-align:center;" width="200"> #{p.eyeColor}
-            </p:column>
-            <p:column headerText="Цвет волос"
-                      style="text-align:center;" width="200"> #{p.hairColor}
-            </p:column>
-            <p:column headerText="Локация" style="text-align:center;" width="200">(#{p.location.x}, #{p.location.y},
-                #{p.location.z})
-            </p:column>
-            <p:column headerText="Дата рождения" style="text-align:center;" width="200">#{p.birthday}</p:column>
-            <p:column headerText="Вес" style="text-align:center;" width="200">#{p.weight}</p:column>
-            <p:column headerText="passportID"
-                      style="text-align:center;" width="200">
-                #{p.passportID}
-            </p:column>
-        </p:dataTable>
+        <h:form id="personForm" style="width: 70%;">
+            <p:dataTable id="personTable"
+                         class="data-table"
+                         value="#{personBean.filteredPersonList}"
+                         var="p"
+                         paginator="true"
+                         rows="5"
+                         scrollable="true"
+                         scrollWidth="100%">
+                <p:column headerText="Действие" style="text-align:center;" width="200">
+                    <div class="action-column">
+                        <p:commandButton styleClass="action-button" value="Посмотреть" icon="pi pi-search"
+                                         action="#{redirectBean.toPerson(p.id)}"/>
+
+                        <p:commandButton styleClass="action-button" value="Редактировать" icon="pi pi-pencil"
+                                         actionListener="#{personDialogBean.openEditDialog(p.id)}"
+                                         oncomplete="PF('personDialog').show();"
+                                         update=":personDialogForm"/>
+
+                        <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
+                                         action="#{personBean.deletePerson(p.id)}"
+                                         update=":personForm:personTable"
+                                         process="@this"
+                                         onclick="if(!confirm('Вы уверены, что хотите удалить человека \\'#{p.name}\\'?')) return false;"/>
+                    </div>
+                </p:column>
+                <p:column headerText="ID" style="text-align:center;" width="100">#{p.id}</p:column>
+                <p:column headerText="Имя"
+                          style="text-align:center;"
+                          width="200">
+                    #{p.name}
+                </p:column>
+                <p:column headerText="Цвет глаз"
+                          style="text-align:center;" width="200"> #{p.eyeColor}
+                </p:column>
+                <p:column headerText="Цвет волос"
+                          style="text-align:center;" width="200"> #{p.hairColor}
+                </p:column>
+                <p:column headerText="Локация" style="text-align:center;" width="200">(#{p.location.x}, #{p.location.y},
+                    #{p.location.z})
+                </p:column>
+                <p:column headerText="Дата рождения" style="text-align:center;" width="200">#{p.birthday}</p:column>
+                <p:column headerText="Вес" style="text-align:center;" width="200">#{p.weight}</p:column>
+                <p:column headerText="passportID"
+                          style="text-align:center;" width="200">
+                    #{p.passportID}
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </div>
 
     <h2>Список локаций:</h2>
-    <p:dataTable id="locationTable"
-                 class="data-table"
-                 value="#{locationBean.locationList}"
-                 var="l"
-                 paginator="true"
-                 rows="5"
-                 scrollable="true"
-                 scrollWidth="90%">
-        <p:column headerText="ID" style="text-align:center;" width="10%">#{l.id}</p:column>
-        <p:column headerText="X" style="text-align:center;" width="30%"> #{l.x}</p:column>
-        <p:column headerText="Y" style="text-align:center;" width="30%"> #{l.y}</p:column>
-        <p:column headerText="Z" style="text-align:center;" width="30%"> #{l.z}</p:column>
-    </p:dataTable>
+    <h:form id="locationForm" style="width: 70%;">
+        <p:dataTable id="locationTable"
+                     class="data-table"
+                     value="#{locationBean.locationList}"
+                     var="l"
+                     paginator="true"
+                     rows="5"
+                     scrollable="true"
+                     scrollWidth="100%">
+            <p:column headerText="ID" style="text-align:center;" width="10%">#{l.id}</p:column>
+            <p:column headerText="X" style="text-align:center;" width="30%"> #{l.x}</p:column>
+            <p:column headerText="Y" style="text-align:center;" width="30%"> #{l.y}</p:column>
+            <p:column headerText="Z" style="text-align:center;" width="30%"> #{l.z}</p:column>
+        </p:dataTable>
+    </h:form>
 
     <h2>Список координат:</h2>
-    <p:dataTable id="coordinatesTable"
-                 class="data-table"
-                 value="#{coordinatesBean.coordinatesList}"
-                 var="c"
-                 paginator="true"
-                 rows="5"
-                 scrollable="true"
-                 scrollWidth="90%">
-        <p:column headerText="ID" style="text-align:center;" width="20%">#{c.id}</p:column>
-        <p:column headerText="X" style="text-align:center;" width="40%"> #{c.x}</p:column>
-        <p:column headerText="Y" style="text-align:center;" width="40%"> #{c.y}</p:column>
-    </p:dataTable>
+    <h:form id="coordinatesForm" style="width: 70%;">
+        <p:dataTable id="coordinatesTable"
+                     class="data-table"
+                     value="#{coordinatesBean.coordinatesList}"
+                     var="c"
+                     paginator="true"
+                     rows="5"
+                     scrollable="true"
+                     scrollWidth="100%">
+            <p:column headerText="ID" style="text-align:center;" width="20%">#{c.id}</p:column>
+            <p:column headerText="X" style="text-align:center;" width="40%"> #{c.x}</p:column>
+            <p:column headerText="Y" style="text-align:center;" width="40%"> #{c.y}</p:column>
+        </p:dataTable>
+    </h:form>
 
     <ui:include src="/dialogs/movieDialog.xhtml"/>
     <ui:include src="/dialogs/personDialog.xhtml"/>

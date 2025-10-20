@@ -141,6 +141,30 @@ public class DatabaseManager {
         }
     }
 
+    public void deletePerson(int id) {
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Person existingPerson = em.find(Person.class, id);
+            if (existingPerson == null) {
+                System.err.println("Person not found with id: " + id);
+                transaction.rollback();
+                return;
+            }
+
+            em.remove(existingPerson);
+            transaction.commit();
+            System.out.println("Person deleted successfully with id: " + id);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Person delete ERROR: " + e);
+        }
+    }
+
     public void addLocation(Location location) {
         if (validator.validateLocation(location)) {
             EntityTransaction transaction = em.getTransaction();
@@ -189,6 +213,30 @@ public class DatabaseManager {
         }
     }
 
+    public void deleteLocation(int id) {
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Location existingLocation = em.find(Location.class, id);
+            if (existingLocation == null) {
+                System.err.println("Location not found with id: " + id);
+                transaction.rollback();
+                return;
+            }
+
+            em.remove(existingLocation);
+            transaction.commit();
+            System.out.println("Location deleted successfully with id: " + id);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Location delete ERROR: " + e);
+        }
+    }
+
     public void addCoordinates(Coordinates coordinates) {
         if (validator.validateCoordinates(coordinates)) {
             EntityTransaction transaction = em.getTransaction();
@@ -234,6 +282,30 @@ public class DatabaseManager {
                 transaction.rollback();
             }
             System.err.println("Coordinates update ERROR: " + e);
+        }
+    }
+
+    public void deleteCoordinates(int id) {
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Coordinates existingCoordinates = em.find(Coordinates.class, id);
+            if (existingCoordinates == null) {
+                System.err.println("Coordinates not found with id: " + id);
+                transaction.rollback();
+                return;
+            }
+
+            em.remove(existingCoordinates);
+            transaction.commit();
+            System.out.println("Coordinates deleted successfully with id: " + id);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Coordinates delete ERROR: " + e);
         }
     }
 

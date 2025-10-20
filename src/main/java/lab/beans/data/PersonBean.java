@@ -1,5 +1,7 @@
-package lab.beans.filters;
+package lab.beans.data;
 
+import lab.beans.util.Updatable;
+import lab.beans.util.UpdateBean;
 import lab.data.Person;
 import lab.database.DatabaseManager;
 import lab.data.enums.Color;
@@ -8,56 +10,64 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @ManagedBean(name = "personBean")
 @SessionScoped
-public class PersonBean {
+public class PersonBean implements Updatable {
     @EJB
     private DatabaseManager databaseManager;
-    private List<Person> personList;
     private List<Person> filteredPersonList;
-    private Person person = new Person();
-    private Integer selectedLocationId;
+
+    private UpdateBean updateBean;
+    private long lastKnownVersion = -1;
+
     private String nameFilter;
     private String eyeColorFilter;
     private String hairColorFilter;
     private String passportIDFilter;
+
     private String sortByColumn;
     private final List<String> sortColumns = Arrays.asList("Нет", "По имени", "По цвету глаз", "По цвету волос");
 
+
     @PostConstruct
     public void init() {
-        personList = databaseManager.getPersonList();
-        filteredPersonList = personList;
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+        lastKnownVersion = updateBean.getVersion();
+        updateTable();
     }
 
-    public String addPerson() {
-        person.setLocation(databaseManager.getLocationById(selectedLocationId));
-        databaseManager.addPerson(person);
-        cleanData();
-        return "index.xhtml";
+    public void checkForUpdates() {
+        long currentVersion = updateBean.getVersion();
+        if (currentVersion != lastKnownVersion) {
+            lastKnownVersion = currentVersion;
+            updateTable();
+        }
     }
 
-    public void editPerson() {
-
+    public void updateTable() {
+        applyFiltersAndSort();
     }
 
-    public void deletePerson() {
-
+    public void applyFiltersAndSort() {
+        applyFilters();
+        applySort();
     }
 
-    private void cleanData() {
-        person = new Person();
-        selectedLocationId = null;
-        personList = databaseManager.getPersonList();
-        filteredPersonList = personList;
-        System.out.println("Cleaned Person Form");
+    public void deletePerson(int id) {
+        databaseManager.deletePerson(id);
+        updateTable();
     }
 
     public void applyFilters() {
-        filteredPersonList = personList.stream()
+        List<Person> allPersons = databaseManager.getPersonList();
+
+        filteredPersonList = allPersons.stream()
                 .filter(p -> nameFilter == null || nameFilter.isEmpty() || p.getName().equals(nameFilter))
                 .filter(p -> eyeColorFilter == null || eyeColorFilter.isEmpty() || p.getEyeColor().name().equalsIgnoreCase(eyeColorFilter))
                 .filter(p -> hairColorFilter == null || hairColorFilter.isEmpty() || p.getHairColor().name().equalsIgnoreCase(hairColorFilter))
@@ -66,10 +76,21 @@ public class PersonBean {
     }
 
     public void removeFilters() {
-        filteredPersonList = personList;
+        nameFilter = null;
+        eyeColorFilter = null;
+        hairColorFilter = null;
+        passportIDFilter = null;
+        applyFiltersAndSort();
     }
 
     public void applySort() {
+        if (sortByColumn == null || sortByColumn.equals("Нет")) {
+            filteredPersonList = filteredPersonList.stream()
+                    .sorted(Comparator.comparing(Person::getId))
+                    .collect(Collectors.toList());
+            return;
+        }
+
         switch (sortByColumn) {
             case "По имени":
                 filteredPersonList = filteredPersonList.stream()
@@ -98,32 +119,12 @@ public class PersonBean {
         return Arrays.asList(Color.values());
     }
 
-    public List<Person> getPersonList() {
-        return personList;
-    }
-
     public List<Person> getFilteredPersonList() {
         return filteredPersonList;
     }
 
     public void setFilteredPersonList(List<Person> filteredPersonList) {
         this.filteredPersonList = filteredPersonList;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Integer getSelectedLocationId() {
-        return selectedLocationId;
-    }
-
-    public void setSelectedLocationId(Integer selectedLocationId) {
-        this.selectedLocationId = selectedLocationId;
     }
 
     public String getNameFilter() {
@@ -150,7 +151,6 @@ public class PersonBean {
         this.hairColorFilter = hairColorFilter;
     }
 
-
     public String getPassportIDFilter() {
         return passportIDFilter;
     }
@@ -169,5 +169,9 @@ public class PersonBean {
 
     public List<String> getSortColumns() {
         return sortColumns;
+    }
+
+    public List<Person> getPersonList() {
+        return databaseManager.getPersonList();
     }
 }
