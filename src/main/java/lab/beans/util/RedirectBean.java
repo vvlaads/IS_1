@@ -1,4 +1,4 @@
-package lab.beans;
+package lab.beans.util;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;

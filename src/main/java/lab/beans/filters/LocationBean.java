@@ -1,4 +1,4 @@
-package lab.beans;
+package lab.beans.filters;
 
 import lab.data.Location;
 import lab.database.DatabaseManager;

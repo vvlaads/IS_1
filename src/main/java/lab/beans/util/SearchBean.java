@@ -1,4 +1,6 @@
-package lab.beans;
+package lab.beans.util;
+
+import lab.beans.util.RedirectBean;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;

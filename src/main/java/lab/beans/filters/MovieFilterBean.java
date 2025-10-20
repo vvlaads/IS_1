@@ -1,84 +1,61 @@
-package lab.beans;
+package lab.beans.filters;
 
+import lab.beans.data.MovieDataBean;
 import lab.data.Movie;
 import lab.database.DatabaseManager;
-import lab.data.enums.MovieGenre;
-import lab.data.enums.MpaaRating;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-@ManagedBean(name = "movieBean")
+@ManagedBean(name = "movieFilterBean")
 @SessionScoped
-public class MovieBean {
+public class MovieFilterBean {
     @EJB
     private DatabaseManager databaseManager;
 
-    private List<Movie> movieList;
+    private MovieDataBean movieDataBean;
     private List<Movie> filteredMovieList;
-    private Movie movie = new Movie();
-
-    private Integer selectedDirectorId;
-    private Integer selectedScreenwriterId;
-    private Integer selectedOperatorId;
-    private Integer selectedCoordinatesId;
-
     private String nameFilter;
     private String mpaaRatingFilter;
     private String genreFilter;
     private String sortByColumn;
     private List<String> sortColumns = Arrays.asList("Нет", "По названию", "По рейтингу MPAA", "По жанру");
+    private long lastKnownVersion = -1; // Последняя известная версия данных
 
     @PostConstruct
     public void init() {
-        movieList = databaseManager.getMovieList();
-        filteredMovieList = movieList;
-        applySort();
-    }
-
-    public void update() {
-        movieList = databaseManager.getMovieList();
+        FacesContext context = FacesContext.getCurrentInstance();
+        movieDataBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{movieDataBean}", MovieDataBean.class);
+        lastKnownVersion = movieDataBean.getVersion();
         applyFiltersAndSort();
     }
 
-    public String addMovie() {
-        movie.setDirector(databaseManager.getPersonById(selectedDirectorId));
-        movie.setScreenwriter(databaseManager.getPersonById(selectedScreenwriterId));
-        movie.setOperator(databaseManager.getPersonById(selectedOperatorId));
-        movie.setCoordinates(databaseManager.getCoordinatesById(selectedCoordinatesId));
-        databaseManager.addMovie(movie);
-        cleanData();
-        return "index.xhtml";
+    // Этот метод будет вызываться периодически через polling
+    public void checkForUpdates() {
+        long currentVersion = movieDataBean.getVersion();
+        if (currentVersion != lastKnownVersion) {
+            // Данные изменились, обновляем
+            lastKnownVersion = currentVersion;
+            applyFiltersAndSort();
+        }
     }
 
-    public void editMovie(int id) {
-        movie = databaseManager.getMovieById(id);
-        System.out.println(movie);
-        movie.setBudget(12_000_000);
-        System.out.println(movie);
-        databaseManager.updateMovie(movie);
-        update();
+    public void update() {
+        applyFiltersAndSort();
     }
 
-    public void deleteMovie() {
-    }
-
-    private void cleanData() {
-        movie = new Movie();
-        selectedDirectorId = null;
-        selectedScreenwriterId = null;
-        selectedOperatorId = null;
-        selectedCoordinatesId = null;
-        movieList = databaseManager.getMovieList();
-        filteredMovieList = movieList;
-        System.out.println("Cleaned Movie Form");
+    public void deleteMovie(int id) {
+        movieDataBean.deleteMovie(id);
+        lastKnownVersion = movieDataBean.getVersion();
+        applyFiltersAndSort();
     }
 
     public void applyFiltersAndSort() {
@@ -87,8 +64,11 @@ public class MovieBean {
     }
 
     private void applyFilters() {
-        filteredMovieList = movieList.stream()
-                .filter(m -> nameFilter == null || nameFilter.isEmpty() || m.getName().equals(nameFilter))
+        List<Movie> allMovies = movieDataBean.getMovieList();
+
+        filteredMovieList = allMovies.stream()
+                .filter(m -> nameFilter == null || nameFilter.isEmpty() ||
+                        m.getName().toLowerCase().contains(nameFilter.toLowerCase()))
                 .filter(m -> mpaaRatingFilter == null || mpaaRatingFilter.isEmpty() ||
                         (m.getMpaaRating() != null && m.getMpaaRating().name().equalsIgnoreCase(mpaaRatingFilter)))
                 .filter(m -> genreFilter == null || genreFilter.isEmpty() ||
@@ -97,8 +77,10 @@ public class MovieBean {
     }
 
     public void removeFilters() {
-        filteredMovieList = movieList;
-        applySort();
+        nameFilter = null;
+        mpaaRatingFilter = null;
+        genreFilter = null;
+        applyFiltersAndSort();
     }
 
     private void applySort() {
@@ -131,59 +113,6 @@ public class MovieBean {
                         .collect(Collectors.toList());
                 break;
         }
-    }
-
-
-    public List<Movie> getMovieList() {
-        return movieList;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public List<MpaaRating> getMpaaRatingList() {
-        return Arrays.asList(MpaaRating.values());
-    }
-
-    public List<MovieGenre> getMovieGenreList() {
-        return Arrays.asList(MovieGenre.values());
-    }
-
-    public Integer getSelectedDirectorId() {
-        return selectedDirectorId;
-    }
-
-    public void setSelectedDirectorId(Integer selectedDirectorId) {
-        this.selectedDirectorId = selectedDirectorId;
-    }
-
-    public Integer getSelectedScreenwriterId() {
-        return selectedScreenwriterId;
-    }
-
-    public void setSelectedScreenwriterId(Integer selectedScreenwriterId) {
-        this.selectedScreenwriterId = selectedScreenwriterId;
-    }
-
-    public Integer getSelectedOperatorId() {
-        return selectedOperatorId;
-    }
-
-    public void setSelectedOperatorId(Integer selectedOperatorId) {
-        this.selectedOperatorId = selectedOperatorId;
-    }
-
-    public Integer getSelectedCoordinatesId() {
-        return selectedCoordinatesId;
-    }
-
-    public void setSelectedCoordinatesId(Integer selectedCoordinatesId) {
-        this.selectedCoordinatesId = selectedCoordinatesId;
     }
 
     public List<Movie> getFilteredMovieList() {

@@ -12,6 +12,12 @@
 </h:head>
 
 <h:body>
+    <!-- Polling - проверяет обновления каждые 3 секунды -->
+    <p:poll interval="3"
+            update=":movieForm:movieTable"
+            listener="#{movieFilterBean.checkForUpdates}"
+            global="false"/>
+
     <f:metadata>
         <f:event type="preRenderView" listener="#{navigationBean.markPage('index')}"/>
     </f:metadata>
@@ -44,37 +50,50 @@
                 <h:panelGrid columns="2" cellpadding="8" style="width:100%">
                     <h3>Сортировка:</h3>
                     <p:selectOneMenu id="sortMovie"
-                                     value="#{movieBean.sortByColumn}"
+                                     value="#{movieFilterBean.sortByColumn}"
                                      required="false">
-                        <f:selectItems value="#{movieBean.sortColumns}"
+                        <f:selectItems value="#{movieFilterBean.sortColumns}"
                                        var="columnName"
                                        itemValue="#{columnName}"
                                        itemLabel="#{columnName}"/>
 
                         <!-- Когда пользователь меняет значение -->
                         <p:ajax event="change"
-                                listener="#{movieBean.applyFiltersAndSort}"
+                                listener="#{movieFilterBean.applyFiltersAndSort}"
                                 update=":movieForm:movieTable"/>
                     </p:selectOneMenu>
                 </h:panelGrid>
             </h:form>
         </div>
-        <h:form id="movieForm" style="width: 75%;">
+        <h:form id="movieForm" style="width: 70%;">
             <p:dataTable id="movieTable"
                          class="data-table"
-                         value="#{movieBean.filteredMovieList}"
+                         value="#{movieFilterBean.filteredMovieList}"
                          var="m"
                          paginator="true"
                          rows="5"
                          scrollable="true"
                          scrollWidth="100%">
                 <p:column headerText="Действие" style="text-align:center;" width="200">
-                    <p:commandButton value="Редактировать"
-                                     actionListener="#{movieDialogBean.openEditDialog(m.id)}"
-                                     oncomplete="PF('movieDialog').show();"
-                                     update=":movieDialogForm"/>
+                    <div class="action-column">
+                        <p:commandButton styleClass="action-button" value="Посмотреть" icon="pi pi-search"
+                                         action="#{redirectBean.toMovie(m.id)}"/>
+
+                        <p:commandButton styleClass="action-button" value="Редактировать" icon="pi pi-pencil"
+                                         actionListener="#{movieDialogBean.openEditDialog(m.id)}"
+                                         oncomplete="PF('movieDialog').show();"
+                                         update=":movieDialogForm"/>
+
+                        <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
+                                         action="#{movieFilterBean.deleteMovie(m.id)}"
+                                         update=":movieForm:movieTable"
+                                         process="@this"
+                                         onclick="if(!confirm('Вы уверены, что хотите удалить фильм \\'#{m.name}\\'?')) return false;"/>
+                    </div>
                 </p:column>
-                <p:column headerText="ID" style="text-align:center;" width="100">#{m.id}</p:column>
+                <p:column headerText=" ID
+                    " style="text-align:center;" width="100">#{m.id}
+                </p:column>
                 <p:column headerText="Название" style="text-align:center;" width="200"> #{m.name}</p:column>
                 <p:column headerText="Координаты" style="text-align:center;" width="200"> (#{m.coordinates.x},
                     #{m.coordinates.y})

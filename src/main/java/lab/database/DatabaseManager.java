@@ -68,6 +68,30 @@ public class DatabaseManager {
         }
     }
 
+    public void deleteMovie(int id) {
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Movie existingMovie = em.find(Movie.class, id);
+            if (existingMovie == null) {
+                System.err.println("Movie not found with id: " + id);
+                transaction.rollback();
+                return;
+            }
+
+            em.remove(existingMovie);
+            transaction.commit();
+            System.out.println("Movie deleted successfully with id: " + id);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Movie delete ERROR: " + e);
+        }
+    }
+
 
     public void addPerson(Person person) {
         if (validator.validatePerson(person)) {

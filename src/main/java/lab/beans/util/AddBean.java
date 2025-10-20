@@ -1,4 +1,4 @@
-package lab.beans;
+package lab.beans.util;
 
 import org.primefaces.PrimeFaces;
 
