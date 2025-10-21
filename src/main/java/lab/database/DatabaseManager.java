@@ -10,6 +10,7 @@ import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -379,5 +380,123 @@ public class DatabaseManager {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public boolean deleteMovieByGoldenPalmCount(int goldenPalmCount) {
+        if (goldenPalmCount <= 0) {
+            System.err.println("Количество Золотых пальмовых ветвей должно быть положительным");
+            return false;
+        }
+
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            Object result = em.createNativeQuery(
+                            "SELECT delete_movie_by_golden_palm_count(:count)")
+                    .setParameter("count", goldenPalmCount)
+                    .getSingleResult();
+
+            transaction.commit();
+
+            int deletedId = ((Number) result).intValue();
+            boolean success = deletedId > 0;
+
+            if (success) {
+                System.out.println("Фильм с " + goldenPalmCount + " Золотыми пальмовыми ветвями успешно удален. ID: " + deletedId);
+            } else {
+                System.out.println("Фильм с указанным количеством Золотых пальмовых ветвей не найден");
+            }
+
+            return success;
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Ошибка при удалении фильма по количеству пальмовых ветвей: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Movie> findMoviesByNameStartingWith(String prefix) {
+        if (prefix == null || prefix.trim().isEmpty()) {
+            System.err.println("Префикс не может быть пустым");
+            return Collections.emptyList();
+        }
+
+        try {
+            List<Movie> movies = em.createQuery("SELECT * FROM get_movies_by_name_prefix('" + prefix + "')", Movie.class)
+                    .getResultList();
+
+            System.out.println("Найдено фильмов с названием, начинающимся на '" + prefix + "': " + movies.size());
+            return movies;
+
+        } catch (Exception e) {
+            System.err.println("Ошибка при поиске фильмов по названию: " + e.getMessage());
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Movie> findMoviesByGoldenPalmCountGreaterThan(int minCount) {
+        if (minCount < 0) {
+            System.err.println("Количество Золотых пальмовых ветвей не может быть отрицательным");
+            return Collections.emptyList();
+        }
+
+        try {
+            List<Movie> movies = em.createNativeQuery(
+                            "SELECT * FROM get_movies_by_golden_palm_count(?1)", Movie.class)
+                    .setParameter(1, minCount)
+                    .getResultList();
+
+            System.out.println("Найдено фильмов с количеством пальмовых ветвей больше " + minCount + ": " + movies.size());
+            return movies;
+
+        } catch (Exception e) {
+            System.err.println("Ошибка при поиске фильмов по количеству пальмовых ветвей: " + e.getMessage());
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+
+    public List<Person> findOperatorsWithoutOscars() {
+        try {
+            List<Person> operators = em.createNativeQuery(
+                            "SELECT * FROM get_operators_without_oscars()", Person.class)
+                    .getResultList();
+
+            System.out.println("Найдено операторов без фильмов-обладателей Оскара: " + operators.size());
+            return operators;
+
+        } catch (Exception e) {
+            System.err.println("Ошибка при поиске операторов без оскаров: " + e.getMessage());
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public void rewardLongMovies(int minLength, int oscarsToAdd) {
+        try {
+            em.createNativeQuery("SELECT reward_long_movies(:min_length, :oscars_to_add)")
+                    .setParameter("min_length", minLength)
+                    .setParameter("oscars_to_add", oscarsToAdd)
+                    .executeUpdate();
+
+            System.out.println("Наградили все фильмы длиннее " + minLength + " на " + oscarsToAdd + " Оскаров");
+        } catch (Exception e) {
+            System.err.println("Ошибка при награждении фильмов: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    public List<Movie> findMoviesByCoordinatesId(int coordinatesId) {
+        return em.createQuery(
+                        "SELECT m FROM Movie m WHERE m.coordinates.id = :coordinatesId", Movie.class)
+                .setParameter("coordinatesId", coordinatesId)
+                .getResultList();
     }
 }

@@ -25,7 +25,7 @@ public class UpdateController {
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
         movieBean = context.getApplication()
-                .evaluateExpressionGet(context, "#{movieFilterBean}", MovieBean.class);
+                .evaluateExpressionGet(context, "#{movieBean}", MovieBean.class);
         personBean = context.getApplication()
                 .evaluateExpressionGet(context, "#{personBean}", PersonBean.class);
         locationBean = context.getApplication()

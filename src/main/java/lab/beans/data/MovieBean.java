@@ -55,6 +55,7 @@ public class MovieBean implements Updatable {
 
     public void deleteMovie(int id) {
         databaseManager.deleteMovie(id);
+        updateBean.increaseVersion();
         updateTable();
     }
 
