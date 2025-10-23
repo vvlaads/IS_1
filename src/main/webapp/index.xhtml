@@ -228,6 +228,23 @@
                      rows="5"
                      scrollable="true"
                      scrollWidth="100%">
+            <p:column headerText="Действие" style="text-align:center;" width="200">
+                <div class="action-column">
+                    <p:commandButton styleClass="action-button" value="Посмотреть" icon="pi pi-search"
+                                     action="#{redirectBean.toLocation(l.id)}"/>
+
+                    <p:commandButton styleClass="action-button" value="Редактировать" icon="pi pi-pencil"
+                                     actionListener="#{locationDialogBean.openEditDialog(l.id)}"
+                                     oncomplete="PF('locationDialog').show();"
+                                     update=":locationDialogForm"/>
+
+                    <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
+                                     action="#{locationBean.deleteLocation(l.id)}"
+                                     update=":locationForm:locationTable"
+                                     process="@this"
+                                     onclick="if(!confirm('Вы уверены, что хотите удалить локацию \\'#{l.id}\\'?')) return false;"/>
+                </div>
+            </p:column>
             <p:column headerText="ID" style="text-align:center;" width="10%">#{l.id}</p:column>
             <p:column headerText="X" style="text-align:center;" width="30%"> #{l.x}</p:column>
             <p:column headerText="Y" style="text-align:center;" width="30%"> #{l.y}</p:column>
@@ -245,6 +262,23 @@
                      rows="5"
                      scrollable="true"
                      scrollWidth="100%">
+            <p:column headerText="Действие" style="text-align:center;" width="200">
+                <div class="action-column">
+                    <p:commandButton styleClass="action-button" value="Посмотреть" icon="pi pi-search"
+                                     action="#{redirectBean.toCoordinates(c.id)}"/>
+
+                    <p:commandButton styleClass="action-button" value="Редактировать" icon="pi pi-pencil"
+                                     actionListener="#{coordinatesDialogBean.openEditDialog(c.id)}"
+                                     oncomplete="PF('coordinatesDialog').show();"
+                                     update=":coordinatesDialogForm"/>
+
+                    <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
+                                     action="#{coordinatesBean.deleteCoordinates(c.id)}"
+                                     update=":coordinatesForm:coordinatesTable"
+                                     process="@this"
+                                     onclick="if(!confirm('Вы уверены, что хотите удалить координаты \\'#{c.id}\\'?')) return false;"/>
+                </div>
+            </p:column>
             <p:column headerText="ID" style="text-align:center;" width="20%">#{c.id}</p:column>
             <p:column headerText="X" style="text-align:center;" width="40%"> #{c.x}</p:column>
             <p:column headerText="Y" style="text-align:center;" width="40%"> #{c.y}</p:column>
