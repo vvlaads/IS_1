@@ -1,5 +1,7 @@
 package lab.data;
 
+import lab.util.annotations.NotNull;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,6 +11,7 @@ public class Coordinates {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(nullable = false)
+    @NotNull
     private Long x; //Поле не может быть null
     @Column
     private long y;

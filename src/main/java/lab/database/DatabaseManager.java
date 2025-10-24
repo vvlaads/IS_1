@@ -1,47 +1,42 @@
 package lab.database;
 
-import lab.util.Validator;
+
 import lab.data.Coordinates;
 import lab.data.Location;
 import lab.data.Movie;
 import lab.data.Person;
+import lab.util.Validator;
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolation;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
-@TransactionManagement(TransactionManagementType.CONTAINER)
 public class DatabaseManager {
     @PersistenceContext(unitName = "PersistenceUnit")
     private EntityManager em;
 
-    private final Validator validator = new Validator();
-
+    //    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+//    public void addMovie(Movie movie) {
+//        Set<ConstraintViolation<Movie>> violations = validator.validate(movie);
+//        if (violations.isEmpty()) {
+//            em.persist(movie);
+//        } else {
+//            for (ConstraintViolation<Movie> v : violations) {
+//                System.err.println(v.getPropertyPath() + " " + v.getMessage());
+//            }
+//        }
+//    }
     public void addMovie(Movie movie) {
-        if (validator.validateMovie(movie)) {
-            EntityTransaction transaction = em.getTransaction();
-            try {
-                transaction.begin();
-                em.persist(movie);
-                transaction.commit();
-                System.out.println("Movie saved successfully: " + movie);
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                System.err.println("Movie saved ERROR: " + e);
-            }
-        } else {
-            System.err.println("Illegal arguments for Movie: " + movie);
-        }
     }
 
     public void updateMovie(Movie movie) {
-        if (!validator.validateMovie(movie)) {
+        if (false) {
             System.err.println("Illegal arguments for Movie: " + movie);
             return;
         }
@@ -95,7 +90,7 @@ public class DatabaseManager {
 
 
     public void addPerson(Person person) {
-        if (validator.validatePerson(person)) {
+        if (false) {
             EntityTransaction transaction = em.getTransaction();
             try {
                 transaction.begin();
@@ -114,7 +109,7 @@ public class DatabaseManager {
     }
 
     public void updatePerson(Person person) {
-        if (!validator.validatePerson(person)) {
+        if (false) {
             System.err.println("Illegal arguments for Person: " + person);
             return;
         }
@@ -167,7 +162,7 @@ public class DatabaseManager {
     }
 
     public void addLocation(Location location) {
-        if (validator.validateLocation(location)) {
+        if (false) {
             EntityTransaction transaction = em.getTransaction();
             try {
                 transaction.begin();
@@ -186,7 +181,7 @@ public class DatabaseManager {
     }
 
     public void updateLocation(Location location) {
-        if (!validator.validateLocation(location)) {
+        if (false) {
             System.err.println("Illegal arguments for Location: " + location);
             return;
         }
@@ -238,27 +233,38 @@ public class DatabaseManager {
         }
     }
 
+//    public void addCoordinates(Coordinates coordinates) {
+//        if (false) {
+//            EntityTransaction transaction = em.getTransaction();
+//            try {
+//                transaction.begin();
+//                em.persist(coordinates);
+//                transaction.commit();
+//                System.out.println("Coordinates saved successfully: " + coordinates);
+//            } catch (Exception e) {
+//                if (transaction.isActive()) {
+//                    transaction.rollback();
+//                }
+//                System.err.println("Coordinates saved ERROR: " + e);
+//            }
+//        } else {
+//            System.err.println("Illegal arguments for Coordinates: " + coordinates);
+//        }
+//    }
+
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void addCoordinates(Coordinates coordinates) {
-        if (validator.validateCoordinates(coordinates)) {
-            EntityTransaction transaction = em.getTransaction();
-            try {
-                transaction.begin();
-                em.persist(coordinates);
-                transaction.commit();
-                System.out.println("Coordinates saved successfully: " + coordinates);
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                System.err.println("Coordinates saved ERROR: " + e);
-            }
+        if (Validator.validateObject(coordinates)) {
+            em.persist(coordinates);
         } else {
-            System.err.println("Illegal arguments for Coordinates: " + coordinates);
+            System.err.println("Illegal arguments for coordinates");
+            throw new IllegalArgumentException("Coordinates validation failed");
         }
     }
 
     public void updateCoordinates(Coordinates coordinates) {
-        if (!validator.validateCoordinates(coordinates)) {
+        if (false) {
             System.err.println("Illegal arguments for Coordinates: " + coordinates);
             return;
         }

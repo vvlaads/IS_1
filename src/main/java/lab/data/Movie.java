@@ -4,6 +4,7 @@ import lab.data.enums.MovieGenre;
 import lab.data.enums.MpaaRating;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
@@ -20,6 +21,7 @@ public class Movie {
     private String name; //Поле не может быть null, Строка не может быть пустой
     @ManyToOne
     @JoinColumn(name = "coordinates_id", nullable = false)
+    @Valid
     private Coordinates coordinates; //Поле не может быть null
     @Column(name = "CREATION_DATE", nullable = false)
     private java.time.LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
