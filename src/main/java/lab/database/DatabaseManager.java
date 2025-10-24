@@ -382,80 +382,36 @@ public class DatabaseManager {
         }
     }
 
-    public boolean deleteMovieByGoldenPalmCount(int goldenPalmCount) {
-        if (goldenPalmCount <= 0) {
-            System.err.println("Количество Золотых пальмовых ветвей должно быть положительным");
-            return false;
-        }
-
-        EntityTransaction transaction = em.getTransaction();
+    public Integer deleteMovieByGoldenPalmCount(int count) {
         try {
-            transaction.begin();
-
-            Object result = em.createNativeQuery(
-                            "SELECT delete_movie_by_golden_palm_count(:count)")
-                    .setParameter("count", goldenPalmCount)
+            return (Integer) em.createNativeQuery("SELECT delete_movie_by_golden_palm_count(?)")
+                    .setParameter(1, count)
                     .getSingleResult();
-
-            transaction.commit();
-
-            int deletedId = ((Number) result).intValue();
-            boolean success = deletedId > 0;
-
-            if (success) {
-                System.out.println("Фильм с " + goldenPalmCount + " Золотыми пальмовыми ветвями успешно удален. ID: " + deletedId);
-            } else {
-                System.out.println("Фильм с указанным количеством Золотых пальмовых ветвей не найден");
-            }
-
-            return success;
-
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Ошибка при удалении фильма по количеству пальмовых ветвей: " + e.getMessage());
-            return false;
+            e.printStackTrace();
+            return -1;
         }
     }
 
-    public List<Movie> findMoviesByNameStartingWith(String prefix) {
-        if (prefix == null || prefix.trim().isEmpty()) {
-            System.err.println("Префикс не может быть пустым");
-            return Collections.emptyList();
-        }
-
+    public List<Movie> getMoviesByNamePrefix(String prefix) {
         try {
-            List<Movie> movies = em.createQuery("SELECT * FROM get_movies_by_name_prefix('" + prefix + "')", Movie.class)
+            return em.createNativeQuery(
+                            "SELECT * FROM get_movies_by_name_prefix(?)", Movie.class)
+                    .setParameter(1, prefix)
                     .getResultList();
-
-            System.out.println("Найдено фильмов с названием, начинающимся на '" + prefix + "': " + movies.size());
-            return movies;
-
         } catch (Exception e) {
-            System.err.println("Ошибка при поиске фильмов по названию: " + e.getMessage());
             e.printStackTrace();
             return Collections.emptyList();
         }
     }
 
-    public List<Movie> findMoviesByGoldenPalmCountGreaterThan(int minCount) {
-        if (minCount < 0) {
-            System.err.println("Количество Золотых пальмовых ветвей не может быть отрицательным");
-            return Collections.emptyList();
-        }
 
+    public List<Movie> findMoviesByGoldenPalmCountGreaterThan(int minCount) {
         try {
-            List<Movie> movies = em.createNativeQuery(
-                            "SELECT * FROM get_movies_by_golden_palm_count(?1)", Movie.class)
+            return em.createNativeQuery("SELECT * FROM get_movies_by_golden_palm_count(?)", Movie.class)
                     .setParameter(1, minCount)
                     .getResultList();
-
-            System.out.println("Найдено фильмов с количеством пальмовых ветвей больше " + minCount + ": " + movies.size());
-            return movies;
-
         } catch (Exception e) {
-            System.err.println("Ошибка при поиске фильмов по количеству пальмовых ветвей: " + e.getMessage());
             e.printStackTrace();
             return Collections.emptyList();
         }
@@ -479,14 +435,19 @@ public class DatabaseManager {
     }
 
     public void rewardLongMovies(int minLength, int oscarsToAdd) {
+        EntityTransaction transaction = em.getTransaction();
         try {
-            em.createNativeQuery("SELECT reward_long_movies(:min_length, :oscars_to_add)")
-                    .setParameter("min_length", minLength)
-                    .setParameter("oscars_to_add", oscarsToAdd)
+            transaction.begin();
+            em.createNativeQuery("SELECT reward_long_movies(?, ?)")
+                    .setParameter(1, minLength)
+                    .setParameter(2, oscarsToAdd)
                     .executeUpdate();
-
+            transaction.commit();
             System.out.println("Наградили все фильмы длиннее " + minLength + " на " + oscarsToAdd + " Оскаров");
         } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             System.err.println("Ошибка при награждении фильмов: " + e.getMessage());
             e.printStackTrace();
         }

@@ -71,6 +71,7 @@ VALUES
 ('Nora', 'BLACK', 'RED', 17, NULL, 59, 'NORAX7'),
 ('Oscar', 'BROWN', 'BLACK', 18, '1993-08-13', 74, 'OSC1337'),
 ('Ivy', 'RED', 'BROWN', 19, '1998-02-19', 61, 'IVY-1998'),
+('Tester', 'RED', 'BROWN', 7, '1996-03-15', 60, 'test-001'),
 ('Caleb', 'BLACK', 'RED', 20, NULL, 72, 'CAL01');
 
 
@@ -80,7 +81,7 @@ VALUES
 ('Eternal Horizon', 1, 3, 120000000, 350000000, 'PG_13', 2, 5, 7, 142, 1, 180000000, 'ADVENTURE'),
 ('Silent Shadows', 2, 1, NULL, 90000000, 'R', NULL, 6, 9, 110, 2, 50000000, 'THRILLER'),
 ('Golden Ashes', 3, 2, 40000000, 125000000, NULL, 4, 8, NULL, 98, 1, 60000000, 'DRAMA'),
-('Edge of Nowhere', 4, 1, 80000000, 220000000, 'PG_13', NULL, 3, 5, 128, 3, 150000000, NULL),
+('Edge of Nowhere', 4, 0, 80000000, 220000000, 'PG_13', NULL, 3, 5, 128, 3, 150000000, NULL),
 ('Crimson Path', 5, 4, 60000000, 190000000, 'R', 1, 9, 2, 117, 2, 120000000, 'HORROR'),
 ('Dreamcatcher', 6, 2, NULL, 76000000, NULL, 5, 10, NULL, 104, 1, 40000000, 'DRAMA'),
 ('Laughter Lines', 7, 1, 25000000, 70000000, 'PG_13', 2, 1, 8, 97, 1, 45000000, 'COMEDY'),
@@ -93,7 +94,8 @@ VALUES
 ('The Last Bloom', 14, 1, 27000000, 80000000, NULL, 4, 14, NULL, 102, 2, 60000000, 'DRAMA'),
 ('Night Carnival', 15, 4, 50000000, 210000000, 'R', 7, 15, 2, 144, 3, 140000000, 'HORROR'),
 ('Echo Chamber', 16, 2, NULL, 90000000, NULL, NULL, 16, 5, 112, 1, 70000000, 'THRILLER'),
-('Paper Skies', 17, 1, 15000000, 55000000, 'PG_13', 3, 17, 9, 95, 1, 30000000, 'DRAMA'),
+('Paper Skies', 17, 0, 15000000, 55000000, 'PG_13', 3, 17, 9, 95, 1, 30000000, 'DRAMA'),
 ('Runaway Laughter', 18, 3, 42000000, 160000000, 'PG_13', 2, 18, NULL, 107, 2, 95000000, 'COMEDY'),
 ('Silent Peak', 19, 5, 85000000, 270000000, 'NC_17', 1, 19, 6, 160, 4, 190000000, 'ADVENTURE'),
+('Test test', 19, 0, 85000000, 270000000, 'NC_17', 1, 19, 20, 160, 4, 190000000, 'ADVENTURE'),
 ('Neon Abyss', 20, 2, NULL, 120000000, 'R', NULL, 20, 8, 132, 3, 100000000, 'HORROR');

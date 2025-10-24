@@ -8,17 +8,19 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.util.List;
 
 @ManagedBean(name = "specialFunctionBean")
-@RequestScoped
+@SessionScoped
 public class SpecialFunctionBean {
 
     @EJB
     private DatabaseManager databaseManager;
 
     private int goldenPalmCount;
+    private int deletedMovieId;
     private String namePrefix;
     private int minGoldenPalm;
     private int minLength;
@@ -36,14 +38,15 @@ public class SpecialFunctionBean {
     }
 
     public void deleteByGoldenPalmCount() {
-        boolean result = databaseManager.deleteMovieByGoldenPalmCount(goldenPalmCount);
-        if (result) {
+        int result = databaseManager.deleteMovieByGoldenPalmCount(goldenPalmCount);
+        if (result != -1) {
+            deletedMovieId = result;
             updateBean.increaseVersion();
         }
     }
 
     public void findByNamePrefix() {
-        resultMovies = databaseManager.findMoviesByNameStartingWith(namePrefix);
+        resultMovies = databaseManager.getMoviesByNamePrefix(namePrefix);
     }
 
     public void findByGoldenPalmGreaterThan() {
@@ -56,6 +59,7 @@ public class SpecialFunctionBean {
 
     public void rewardLongMovies() {
         databaseManager.rewardLongMovies(minLength, oscarsToAdd);
+        updateBean.increaseVersion();
     }
 
     public int getGoldenPalmCount() {
@@ -104,5 +108,13 @@ public class SpecialFunctionBean {
 
     public List<Person> getResultOperators() {
         return resultOperators;
+    }
+
+    public int getDeletedMovieId() {
+        return deletedMovieId;
+    }
+
+    public void setDeletedMovieId(int deletedMovieId) {
+        this.deletedMovieId = deletedMovieId;
     }
 }

@@ -74,7 +74,7 @@ CREATE OR REPLACE FUNCTION reward_long_movies(min_length INT, oscars_to_add INT)
 RETURNS VOID AS $$
 BEGIN
     UPDATE movies
-    SET oscarsCount = oscarsCount + oscars_to_add
+    SET oscars_count = oscars_count + oscars_to_add
     WHERE length > min_length;
 END;
 $$ LANGUAGE plpgsql;

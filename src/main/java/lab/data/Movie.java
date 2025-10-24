@@ -24,7 +24,7 @@ public class Movie {
     @Column(name = "CREATION_DATE", nullable = false)
     private java.time.LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     @Column(name = "OSCARS_COUNT", nullable = false)
-    @Min(1)
+    @Min(0)
     private Long oscarsCount; //Значение поля должно быть больше 0, Поле не может быть null
     @Column
     @Min(1)

@@ -11,7 +11,7 @@ public class Validator {
         if (movie.getName() == null || movie.getName().isEmpty()) return false;
         if (movie.getCoordinates() == null || !validateCoordinates(movie.getCoordinates())) return false;
         if (movie.getCreationDate() == null) return false;
-        if (movie.getOscarsCount() == null || movie.getOscarsCount() <= 0) return false;
+        if (movie.getOscarsCount() == null || movie.getOscarsCount() < 0) return false;
         if (movie.getBudget() != null && movie.getBudget() <= 0) return false;
         if (movie.getTotalBoxOffice() <= 0) return false;
         if (movie.getLength() == null || movie.getLength() <= 0) return false;
