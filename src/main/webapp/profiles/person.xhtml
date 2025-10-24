@@ -11,17 +11,34 @@
 </h:head>
 
 <h:body>
+    <p:poll interval="5"
+            listener="#{updateController.checkPersonProfileUpdates}"
+            update=":personProfileForm"
+            onerror="window.location.reload();"
+            global="false"/>
+
     <f:metadata>
         <f:viewParam name="id" value="#{personProfileBean.id}"/>
     </f:metadata>
 
     <ui:include src="/templates/topMenu.xhtml"/>
 
-    <h:form>
+    <h:form id="personProfileForm">
         <h:panelGroup rendered="#{personProfileBean.person != null}" layout="block" styleClass="object-profile-card">
 
             <h2 class="object-title">Человек</h2>
             <p class="object-id">ID: #{personProfileBean.person.id}</p>
+            <div class="actions">
+                <p:commandButton styleClass="action-button" value="Редактировать" icon="pi pi-pencil"
+                                 actionListener="#{personDialogBean.openEditDialog(personProfileBean.id)}"
+                                 oncomplete="PF('personDialog').show();"
+                                 update=":personDialogForm"/>
+
+                <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
+                                 actionListener="#{personConflicts.findMoviesWithConflicts(personProfileBean.id)}"
+                                 oncomplete="PF('personConflictDialog').show();"
+                                 update=":personConflictForm"/>
+            </div>
 
             <div class="object-info-columns">
                 <div class="object-column">
@@ -51,5 +68,8 @@
         </h:panelGroup>
     </h:form>
 
+    <ui:include src="/dialogs/personDialog.xhtml"/>
+    <ui:include src="/dialogs/conflicts/personConflictDialog.xhtml"/>
+    <ui:include src="/dialogs/movieDialog.xhtml"/>
 </h:body>
 </html>

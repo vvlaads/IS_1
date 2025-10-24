@@ -43,7 +43,7 @@
 
                         <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
                                          action="#{personBean.deletePerson(p.id)}"
-                                         update=":personForm:personTable"
+                                         update=":locationConflictForm"
                                          process="@this"
                                          onclick="if(!confirm('Вы уверены, что хотите удалить человека \\'#{p.name}\\'?')) return false;"/>
                     </div>

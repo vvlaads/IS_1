@@ -7,6 +7,10 @@ import lab.beans.data.CoordinatesBean;
 import lab.beans.data.LocationBean;
 import lab.beans.data.MovieBean;
 import lab.beans.data.PersonBean;
+import lab.beans.profiles.CoordinatesProfileBean;
+import lab.beans.profiles.LocationProfileBean;
+import lab.beans.profiles.MovieProfileBean;
+import lab.beans.profiles.PersonProfileBean;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -27,6 +31,11 @@ public class UpdateController {
     private LocationConflicts locationConflicts;
     private PersonConflicts personConflicts;
 
+    private CoordinatesProfileBean coordinatesProfileBean;
+    private LocationProfileBean locationProfileBean;
+    private PersonProfileBean personProfileBean;
+    private MovieProfileBean movieProfileBean;
+
     @PostConstruct
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -44,6 +53,14 @@ public class UpdateController {
                 .evaluateExpressionGet(context, "#{locationConflicts}", LocationConflicts.class);
         personConflicts = context.getApplication()
                 .evaluateExpressionGet(context, "#{personConflicts}", PersonConflicts.class);
+        coordinatesProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{coordinatesProfileBean}", CoordinatesProfileBean.class);
+        locationProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{locationProfileBean}", LocationProfileBean.class);
+        personProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{personProfileBean}", PersonProfileBean.class);
+        movieProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{movieProfileBean}", MovieProfileBean.class);
     }
 
     public void checkAllUpdates() {
@@ -55,5 +72,21 @@ public class UpdateController {
         coordinatesConflicts.checkForUpdates();
         locationConflicts.checkForUpdates();
         personConflicts.checkForUpdates();
+    }
+
+    public void checkCoordinatesProfileUpdates() {
+        coordinatesProfileBean.checkForUpdates();
+    }
+
+    public void checkLocationProfileUpdates() {
+        locationProfileBean.checkForUpdates();
+    }
+
+    public void checkPersonProfileUpdates() {
+        personProfileBean.checkForUpdates();
+    }
+
+    public void checkMovieProfileUpdates() {
+        movieProfileBean.checkForUpdates();
     }
 }

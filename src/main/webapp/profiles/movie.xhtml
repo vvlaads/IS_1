@@ -11,17 +11,35 @@
 </h:head>
 
 <h:body>
+    <p:poll interval="5"
+            listener="#{updateController.checkMovieProfileUpdates}"
+            update=":movieProfileForm"
+            onerror="window.location.reload();"
+            global="false"/>
+
     <f:metadata>
         <f:viewParam name="id" value="#{movieProfileBean.id}"/>
     </f:metadata>
 
     <ui:include src="/templates/topMenu.xhtml"/>
 
-    <h:form>
+    <h:form id="movieProfileForm">
         <h:panelGroup rendered="#{movieProfileBean.movie != null}" layout="block" styleClass="object-profile-card">
 
             <h2 class="object-title">Фильм</h2>
             <p class="object-id">ID: #{movieProfileBean.movie.id}</p>
+            <div class="actions">
+                <p:commandButton styleClass="action-button" value="Редактировать" icon="pi pi-pencil"
+                                 actionListener="#{movieDialogBean.openEditDialog(m.id)}"
+                                 oncomplete="PF('movieDialog').show();"
+                                 update=":movieDialogForm"/>
+
+                <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
+                                 action="#{movieBean.deleteMovie(m.id)}"
+                                 update=":movieProfileForm"
+                                 process="@this"
+                                 onclick="if(!confirm('Вы уверены, что хотите удалить фильм \\'#{m.name}\\'?')) return false;"/>
+            </div>
 
             <div class="object-info-columns">
                 <div class="object-column">
@@ -102,5 +120,6 @@
         </h:panelGroup>
     </h:form>
 
+    <ui:include src="/dialogs/movieDialog.xhtml"/>
 </h:body>
 </html>

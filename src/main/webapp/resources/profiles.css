@@ -74,3 +74,18 @@
 .no-data {
     text-align: center;
 }
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+.action-button {
+    width: 200px;
+}
+
+.delete-button {
+     background-color: #ff6d6d !important;
+}

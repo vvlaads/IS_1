@@ -11,18 +11,35 @@
 </h:head>
 
 <h:body>
+    <p:poll interval="5"
+            listener="#{updateController.checkLocationProfileUpdates}"
+            update=":locationProfileForm"
+            onerror="window.location.reload();"
+            global="false"/>
+
     <f:metadata>
         <f:viewParam name="id" value="#{locationProfileBean.id}"/>
     </f:metadata>
 
     <ui:include src="/templates/topMenu.xhtml"/>
 
-    <h:form>
+    <h:form id="locationProfileForm">
         <h:panelGroup rendered="#{locationProfileBean.location != null}" layout="block"
                       styleClass="object-profile-card">
 
             <h2 class="object-title">Местоположение</h2>
             <p class="object-id">ID: #{locationProfileBean.location.id}</p>
+            <div class="actions">
+                <p:commandButton styleClass="action-button" value="Редактировать" icon="pi pi-pencil"
+                                 actionListener="#{locationDialogBean.openEditDialog(locationProfileBean.id)}"
+                                 oncomplete="PF('locationDialog').show();"
+                                 update=":locationDialogForm"/>
+
+                <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
+                                 actionListener="#{locationConflicts.findPersonsWithConflicts(locationProfileBean.id)}"
+                                 oncomplete="PF('locationConflictDialog').show();"
+                                 update=":locationConflictForm"/>
+            </div>
 
             <div class="object-info-columns">
                 <div class="object-column">
@@ -39,5 +56,8 @@
         </h:panelGroup>
     </h:form>
 
+    <ui:include src="/dialogs/locationDialog.xhtml"/>
+    <ui:include src="/dialogs/conflicts/locationConflictDialog.xhtml"/>
+    <ui:include src="/dialogs/personDialog.xhtml"/>
 </h:body>
 </html>

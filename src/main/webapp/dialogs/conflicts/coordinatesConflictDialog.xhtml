@@ -43,7 +43,7 @@
 
                         <p:commandButton styleClass="action-button delete-button" value="Удалить" icon="pi pi-trash"
                                          action="#{movieBean.deleteMovie(m.id)}"
-                                         update=":movieForm:movieTable"
+                                         update=":coordinatesConflictForm"
                                          process="@this"
                                          onclick="if(!confirm('Вы уверены, что хотите удалить фильм \\'#{m.name}\\'?')) return false;"/>
                     </div>
