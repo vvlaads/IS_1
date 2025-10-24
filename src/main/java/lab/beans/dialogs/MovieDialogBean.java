@@ -1,13 +1,16 @@
 package lab.beans.dialogs;
 
+import lab.beans.util.UpdateBean;
 import lab.data.Movie;
 import lab.data.enums.MovieGenre;
 import lab.data.enums.MpaaRating;
 import lab.database.DatabaseManager;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
 public class MovieDialogBean {
     @EJB
     private DatabaseManager databaseManager;
+    private UpdateBean updateBean;
     private Movie movie = new Movie();
 
     private Integer selectedDirectorId;
@@ -24,6 +28,13 @@ public class MovieDialogBean {
     private Integer selectedCoordinatesId;
 
     private boolean editing = false;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void openAddDialog() {
         movie = new Movie();
@@ -45,6 +56,7 @@ public class MovieDialogBean {
         movie.setOperator(databaseManager.getPersonById(selectedOperatorId));
         movie.setCoordinates(databaseManager.getCoordinatesById(selectedCoordinatesId));
         databaseManager.addMovie(movie);
+        updateBean.increaseVersion();
     }
 
     public void updateMovie() {
@@ -53,6 +65,7 @@ public class MovieDialogBean {
         movie.setOperator(databaseManager.getPersonById(selectedOperatorId));
         movie.setCoordinates(databaseManager.getCoordinatesById(selectedCoordinatesId));
         databaseManager.updateMovie(movie);
+        updateBean.increaseVersion();
     }
 
 

@@ -1,12 +1,15 @@
 package lab.beans.dialogs;
 
+import lab.beans.util.UpdateBean;
 import lab.data.Person;
 import lab.data.enums.Color;
 import lab.database.DatabaseManager;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,10 +18,18 @@ import java.util.List;
 public class PersonDialogBean {
     @EJB
     private DatabaseManager databaseManager;
+    private UpdateBean updateBean;
     private Person person = new Person();
     private Integer selectedLocationId;
 
     private boolean editing = false;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void openAddDialog() {
         person = new Person();
@@ -34,11 +45,13 @@ public class PersonDialogBean {
     public void addPerson() {
         person.setLocation(databaseManager.getLocationById(selectedLocationId));
         databaseManager.addPerson(person);
+        updateBean.increaseVersion();
     }
 
     public void updatePerson() {
         person.setLocation(databaseManager.getLocationById(selectedLocationId));
         databaseManager.updatePerson(person);
+        updateBean.increaseVersion();
     }
 
 

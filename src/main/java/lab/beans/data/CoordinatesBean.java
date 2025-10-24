@@ -3,6 +3,7 @@ package lab.beans.data;
 import lab.beans.util.Updatable;
 import lab.beans.util.UpdateBean;
 import lab.data.Coordinates;
+import lab.data.Movie;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
@@ -10,7 +11,9 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ManagedBean(name = "coordinatesBean")
 @SessionScoped
@@ -42,11 +45,9 @@ public class CoordinatesBean implements Updatable {
 
     public void updateTable() {
         coordinatesList = databaseManager.getCoordinatesList();
-    }
-
-    public void deleteCoordinates(int id) {
-        databaseManager.deleteCoordinates(id);
-        updateTable();
+        coordinatesList = coordinatesList.stream()
+                .sorted(Comparator.comparing(Coordinates::getId))
+                .collect(Collectors.toList());
     }
 
     public List<Coordinates> getCoordinatesList() {

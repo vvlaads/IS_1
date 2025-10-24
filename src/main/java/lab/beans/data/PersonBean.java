@@ -59,11 +59,6 @@ public class PersonBean implements Updatable {
         applySort();
     }
 
-    public void deletePerson(int id) {
-        databaseManager.deletePerson(id);
-        updateTable();
-    }
-
     public void applyFilters() {
         List<Person> allPersons = databaseManager.getPersonList();
 

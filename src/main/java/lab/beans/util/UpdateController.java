@@ -1,5 +1,8 @@
 package lab.beans.util;
 
+import lab.beans.conflicts.CoordinatesConflicts;
+import lab.beans.conflicts.LocationConflicts;
+import lab.beans.conflicts.PersonConflicts;
 import lab.beans.data.CoordinatesBean;
 import lab.beans.data.LocationBean;
 import lab.beans.data.MovieBean;
@@ -20,6 +23,9 @@ public class UpdateController {
     private LocationBean locationBean;
 
     private CoordinatesBean coordinatesBean;
+    private CoordinatesConflicts coordinatesConflicts;
+    private LocationConflicts locationConflicts;
+    private PersonConflicts personConflicts;
 
     @PostConstruct
     public void init() {
@@ -32,6 +38,12 @@ public class UpdateController {
                 .evaluateExpressionGet(context, "#{locationBean}", LocationBean.class);
         coordinatesBean = context.getApplication()
                 .evaluateExpressionGet(context, "#{coordinatesBean}", CoordinatesBean.class);
+        coordinatesConflicts = context.getApplication()
+                .evaluateExpressionGet(context, "#{coordinatesConflicts}", CoordinatesConflicts.class);
+        locationConflicts = context.getApplication()
+                .evaluateExpressionGet(context, "#{locationConflicts}", LocationConflicts.class);
+        personConflicts = context.getApplication()
+                .evaluateExpressionGet(context, "#{personConflicts}", PersonConflicts.class);
     }
 
     public void checkAllUpdates() {
@@ -39,5 +51,9 @@ public class UpdateController {
         personBean.checkForUpdates();
         locationBean.checkForUpdates();
         coordinatesBean.checkForUpdates();
+
+        coordinatesConflicts.checkForUpdates();
+        locationConflicts.checkForUpdates();
+        personConflicts.checkForUpdates();
     }
 }

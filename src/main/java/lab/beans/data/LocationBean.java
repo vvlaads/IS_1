@@ -2,6 +2,7 @@ package lab.beans.data;
 
 import lab.beans.util.Updatable;
 import lab.beans.util.UpdateBean;
+import lab.data.Coordinates;
 import lab.data.Location;
 import lab.database.DatabaseManager;
 
@@ -10,7 +11,9 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ManagedBean(name = "locationBean")
 @SessionScoped
@@ -41,11 +44,9 @@ public class LocationBean implements Updatable {
 
     public void updateTable() {
         locationList = databaseManager.getLocationList();
-    }
-
-    public void deleteLocation(int id) {
-        databaseManager.deleteLocation(id);
-        updateTable();
+        locationList = locationList.stream()
+                .sorted(Comparator.comparing(Location::getId))
+                .collect(Collectors.toList());
     }
 
     public List<Location> getLocationList() {

@@ -494,9 +494,23 @@ public class DatabaseManager {
 
 
     public List<Movie> findMoviesByCoordinatesId(int coordinatesId) {
-        return em.createQuery(
-                        "SELECT m FROM Movie m WHERE m.coordinates.id = :coordinatesId", Movie.class)
+        return em.createQuery("SELECT m FROM Movie m WHERE m.coordinates.id = :coordinatesId", Movie.class)
                 .setParameter("coordinatesId", coordinatesId)
                 .getResultList();
     }
+
+    public List<Person> findPersonsByLocationId(int locationId) {
+        return em.createQuery("SELECT p FROM Person p WHERE p.location.id = :locationId", Person.class)
+                .setParameter("locationId", locationId)
+                .getResultList();
+    }
+
+    public List<Movie> findMoviesByPersonId(int personId) {
+        return em.createQuery("SELECT m FROM Movie m WHERE m.director.id = :personId " +
+                        "OR m.screenwriter.id = :personId " +
+                        "OR m.operator.id = :personId ", Movie.class)
+                .setParameter("personId", personId)
+                .getResultList();
+    }
+
 }

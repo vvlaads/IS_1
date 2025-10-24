@@ -1,20 +1,31 @@
 package lab.beans.dialogs;
 
+import lab.beans.util.UpdateBean;
 import lab.data.Location;
 import lab.database.DatabaseManager;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 @ManagedBean(name = "locationDialogBean")
 @ViewScoped
 public class LocationDialogBean {
     @EJB
     private DatabaseManager databaseManager;
+    private UpdateBean updateBean;
     private Location location = new Location();
 
     private boolean editing = false;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void openAddDialog() {
         location = new Location();
@@ -28,10 +39,12 @@ public class LocationDialogBean {
 
     public void addLocation() {
         databaseManager.addLocation(location);
+        updateBean.increaseVersion();
     }
 
     public void updateLocation() {
         databaseManager.updateLocation(location);
+        updateBean.increaseVersion();
     }
 
 
