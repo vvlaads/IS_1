@@ -2,37 +2,37 @@ package lab.data;
 
 import lab.data.enums.MovieGenre;
 import lab.data.enums.MpaaRating;
+import lab.util.DBObject;
+import lab.util.annotations.*;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "movies")
-public class Movie {
+public class Movie implements DBObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     @Column(nullable = false)
-    @Size(min = 1)
+    @NotNull
+    @NotEmpty
     private String name; //Поле не может быть null, Строка не может быть пустой
     @ManyToOne
     @JoinColumn(name = "coordinates_id", nullable = false)
-    @Valid
+    @NotNull
     private Coordinates coordinates; //Поле не может быть null
     @Column(name = "CREATION_DATE", nullable = false)
     private java.time.LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     @Column(name = "OSCARS_COUNT", nullable = false)
     @Min(0)
+    @NotNull
     private Long oscarsCount; //Значение поля должно быть больше 0, Поле не может быть null
     @Column
-    @Min(1)
+    @MoreThan(0)
     private Integer budget; //Значение поля должно быть больше 0, Поле может быть null
     @Column(name = "TOTAL_BOX_OFFICE")
-    @DecimalMin(value = "0.0", inclusive = false)
+    @MoreThan(0)
     private float totalBoxOffice; //Значение поля должно быть больше 0
     @Column(name = "MPAA_RATING")
     @Enumerated(EnumType.STRING)
@@ -47,13 +47,13 @@ public class Movie {
     @JoinColumn(name = "operator_id")
     private Person operator; //Поле может быть null
     @Column(nullable = false)
-    @Min(1)
+    @MoreThan(0)
     private Integer length; //Поле не может быть null, Значение поля должно быть больше 0
     @Column(name = "GOLDEN_PALM_COUNT")
-    @Min(1)
+    @Min(0)
     private int goldenPalmCount; //Значение поля должно быть больше 0
     @Column(name = "USA_BOX_OFFICE")
-    @DecimalMin(value = "0.0", inclusive = false)
+    @MoreThan(0)
     private double usaBoxOffice; //Значение поля должно быть больше 0
     @Column
     @Enumerated(EnumType.STRING)

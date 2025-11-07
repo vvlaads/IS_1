@@ -1,10 +1,13 @@
 package lab.data;
 
+import lab.util.DBObject;
+import lab.util.annotations.NotNull;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "locations")
-public class Location {
+public class Location implements DBObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -13,6 +16,7 @@ public class Location {
     @Column
     private double y;
     @Column(nullable = false)
+    @NotNull
     private Integer z; //Поле не может быть null
 
     public Location() {

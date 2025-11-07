@@ -1,37 +1,46 @@
 package lab.data;
 
 import lab.data.enums.Color;
+import lab.util.DBObject;
+import lab.util.annotations.MinSize;
+import lab.util.annotations.MoreThan;
+import lab.util.annotations.NotEmpty;
+import lab.util.annotations.NotNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "persons")
-public class Person {
+public class Person implements DBObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Size(min = 1)
     @Column(nullable = false)
+    @NotNull
+    @NotEmpty
     private String name; //Поле не может быть null, Строка не может быть пустой
     @Column(name = "EYE_COLOR", nullable = false)
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Color eyeColor; //Поле не может быть null
     @Column(name = "HAIR_COLOR", nullable = false)
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Color hairColor; //Поле не может быть null
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id", nullable = false)
+    @NotNull
     private Location location; //Поле не может быть null
     @Column(name = "birthday")
     private java.time.LocalDate birthday; //Поле может быть null
     @Column(nullable = false)
-    @Min(1)
+    @NotNull
+    @MoreThan(0)
     private Long weight; //Поле не может быть null, Значение поля должно быть больше 0
     @Column(name = "PASSPORT_ID")
-    @Size(min = 4)
+    @MinSize(4)
+    @NotEmpty
     private String passportID; //Длина строки должна быть не меньше 4, Строка не может быть пустой, Поле может быть null
 
     public Person() {

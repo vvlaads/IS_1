@@ -2,6 +2,7 @@ package lab.beans.conflicts;
 
 import lab.beans.util.Updatable;
 import lab.beans.util.UpdateBean;
+import lab.data.Coordinates;
 import lab.data.Movie;
 import lab.database.DatabaseManager;
 
@@ -39,7 +40,7 @@ public class CoordinatesConflicts implements Updatable {
 
     public void deleteCoordinates() {
         if (allowed) {
-            databaseManager.deleteCoordinates(coordinatesId);
+            databaseManager.deleteObject(Coordinates.class, coordinatesId);
             updateBean.increaseVersion();
         }
     }

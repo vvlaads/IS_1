@@ -40,7 +40,7 @@ public class PersonConflicts implements Updatable {
 
     public void deletePerson() {
         if (allowed) {
-            databaseManager.deletePerson(personId);
+            databaseManager.deleteObject(Person.class, personId);
             updateBean.increaseVersion();
         }
     }

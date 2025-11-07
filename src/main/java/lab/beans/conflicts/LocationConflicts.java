@@ -2,6 +2,7 @@ package lab.beans.conflicts;
 
 import lab.beans.util.Updatable;
 import lab.beans.util.UpdateBean;
+import lab.data.Location;
 import lab.data.Person;
 import lab.database.DatabaseManager;
 
@@ -39,7 +40,7 @@ public class LocationConflicts implements Updatable {
 
     public void deleteLocation() {
         if (allowed) {
-            databaseManager.deleteLocation(locationId);
+            databaseManager.deleteObject(Location.class, locationId);
             updateBean.increaseVersion();
         }
     }

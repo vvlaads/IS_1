@@ -5,316 +5,72 @@ import lab.data.Coordinates;
 import lab.data.Location;
 import lab.data.Movie;
 import lab.data.Person;
+import lab.util.DBObject;
 import lab.util.Validator;
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintViolation;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Stateless
 public class DatabaseManager {
     @PersistenceContext(unitName = "PersistenceUnit")
     private EntityManager em;
 
-    //    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-//    public void addMovie(Movie movie) {
-//        Set<ConstraintViolation<Movie>> violations = validator.validate(movie);
-//        if (violations.isEmpty()) {
-//            em.persist(movie);
-//        } else {
-//            for (ConstraintViolation<Movie> v : violations) {
-//                System.err.println(v.getPropertyPath() + " " + v.getMessage());
-//            }
-//        }
-//    }
-    public void addMovie(Movie movie) {
-    }
-
-    public void updateMovie(Movie movie) {
-        if (false) {
-            System.err.println("Illegal arguments for Movie: " + movie);
-            return;
-        }
-
+    public void addObject(DBObject object) {
         EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
         try {
-            transaction.begin();
-
-            Movie existingMovie = em.find(Movie.class, movie.getId());
-            if (existingMovie == null) {
-                System.err.println("Movie not found with id: " + movie.getId());
-                transaction.rollback();
-                return;
+            if (Validator.validateObject(object)) {
+                em.persist(object);
+            } else {
+                throw new IllegalArgumentException(object.getClass() + " validation failed");
             }
-
-            em.merge(movie);
             transaction.commit();
-            System.out.println("Movie updated successfully: " + movie);
-
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Movie update ERROR: " + e);
+            transaction.rollback();
+            e.printStackTrace();
         }
     }
 
-    public void deleteMovie(int id) {
+    public void updateObject(DBObject object) {
         EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
         try {
-            transaction.begin();
-
-            Movie existingMovie = em.find(Movie.class, id);
-            if (existingMovie == null) {
-                System.err.println("Movie not found with id: " + id);
-                transaction.rollback();
-                return;
-            }
-
-            em.remove(existingMovie);
-            transaction.commit();
-            System.out.println("Movie deleted successfully with id: " + id);
-
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Movie delete ERROR: " + e);
-        }
-    }
-
-
-    public void addPerson(Person person) {
-        if (false) {
-            EntityTransaction transaction = em.getTransaction();
-            try {
-                transaction.begin();
-                em.persist(person);
-                transaction.commit();
-                System.out.println("Person saved successfully: " + person);
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
+            if (Validator.validateObject(object)) {
+                if (em.find(object.getClass(), object.getId()) == null) {
+                    throw new RuntimeException(object.getClass() + " doesn't exist");
                 }
-                System.err.println("Person saved ERROR: " + e);
+                em.merge(object);
+            } else {
+                throw new IllegalArgumentException(object.getClass() + "validation failed");
             }
-        } else {
-            System.err.println("Illegal arguments for Person: " + person);
-        }
-    }
-
-    public void updatePerson(Person person) {
-        if (false) {
-            System.err.println("Illegal arguments for Person: " + person);
-            return;
-        }
-
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-
-            Person existingPerson = em.find(Person.class, person.getId());
-            if (existingPerson == null) {
-                System.err.println("Person not found with id: " + person.getId());
-                transaction.rollback();
-                return;
-            }
-
-            em.merge(person);
             transaction.commit();
-            System.out.println("Person updated successfully: " + person);
-
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Person update ERROR: " + e);
+            transaction.rollback();
+            e.printStackTrace();
         }
     }
 
-    public void deletePerson(int id) {
+    public <T extends DBObject> void deleteObject(Class<T> entityClass, int id) {
         EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
         try {
-            transaction.begin();
-
-            Person existingPerson = em.find(Person.class, id);
-            if (existingPerson == null) {
-                System.err.println("Person not found with id: " + id);
-                transaction.rollback();
-                return;
+            DBObject existObject = em.find(entityClass, id);
+            if (existObject == null) {
+                throw new RuntimeException(entityClass + " doesn't exist");
             }
-
-            em.remove(existingPerson);
+            em.remove(existObject);
             transaction.commit();
-            System.out.println("Person deleted successfully with id: " + id);
-
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Person delete ERROR: " + e);
+            transaction.rollback();
+            e.printStackTrace();
         }
     }
 
-    public void addLocation(Location location) {
-        if (false) {
-            EntityTransaction transaction = em.getTransaction();
-            try {
-                transaction.begin();
-                em.persist(location);
-                transaction.commit();
-                System.out.println("Location saved successfully: " + location);
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                System.err.println("Location saved ERROR: " + e);
-            }
-        } else {
-            System.err.println("Illegal arguments for Location: " + location);
-        }
-    }
-
-    public void updateLocation(Location location) {
-        if (false) {
-            System.err.println("Illegal arguments for Location: " + location);
-            return;
-        }
-
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-
-            Location existingLocation = em.find(Location.class, location.getId());
-            if (existingLocation == null) {
-                System.err.println("Location not found with id: " + location.getId());
-                transaction.rollback();
-                return;
-            }
-
-            em.merge(location);
-            transaction.commit();
-            System.out.println("Location updated successfully: " + location);
-
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Location update ERROR: " + e);
-        }
-    }
-
-    public void deleteLocation(int id) {
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-
-            Location existingLocation = em.find(Location.class, id);
-            if (existingLocation == null) {
-                System.err.println("Location not found with id: " + id);
-                transaction.rollback();
-                return;
-            }
-
-            em.remove(existingLocation);
-            transaction.commit();
-            System.out.println("Location deleted successfully with id: " + id);
-
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Location delete ERROR: " + e);
-        }
-    }
-
-//    public void addCoordinates(Coordinates coordinates) {
-//        if (false) {
-//            EntityTransaction transaction = em.getTransaction();
-//            try {
-//                transaction.begin();
-//                em.persist(coordinates);
-//                transaction.commit();
-//                System.out.println("Coordinates saved successfully: " + coordinates);
-//            } catch (Exception e) {
-//                if (transaction.isActive()) {
-//                    transaction.rollback();
-//                }
-//                System.err.println("Coordinates saved ERROR: " + e);
-//            }
-//        } else {
-//            System.err.println("Illegal arguments for Coordinates: " + coordinates);
-//        }
-//    }
-
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void addCoordinates(Coordinates coordinates) {
-        if (Validator.validateObject(coordinates)) {
-            em.persist(coordinates);
-        } else {
-            System.err.println("Illegal arguments for coordinates");
-            throw new IllegalArgumentException("Coordinates validation failed");
-        }
-    }
-
-    public void updateCoordinates(Coordinates coordinates) {
-        if (false) {
-            System.err.println("Illegal arguments for Coordinates: " + coordinates);
-            return;
-        }
-
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-
-            Coordinates existingCoordinates = em.find(Coordinates.class, coordinates.getId());
-            if (existingCoordinates == null) {
-                System.err.println("Coordinates not found with id: " + coordinates.getId());
-                transaction.rollback();
-                return;
-            }
-
-            em.merge(coordinates);
-            transaction.commit();
-            System.out.println("Coordinates updated successfully: " + coordinates);
-
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Coordinates update ERROR: " + e);
-        }
-    }
-
-    public void deleteCoordinates(int id) {
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-
-            Coordinates existingCoordinates = em.find(Coordinates.class, id);
-            if (existingCoordinates == null) {
-                System.err.println("Coordinates not found with id: " + id);
-                transaction.rollback();
-                return;
-            }
-
-            em.remove(existingCoordinates);
-            transaction.commit();
-            System.out.println("Coordinates deleted successfully with id: " + id);
-
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Coordinates delete ERROR: " + e);
-        }
-    }
 
     public List<Movie> getMovieList() {
         return em.createQuery("SELECT m FROM Movie m", Movie.class).getResultList();

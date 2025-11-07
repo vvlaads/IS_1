@@ -55,7 +55,7 @@ public class MovieDialogBean {
         movie.setScreenwriter(databaseManager.getPersonById(selectedScreenwriterId));
         movie.setOperator(databaseManager.getPersonById(selectedOperatorId));
         movie.setCoordinates(databaseManager.getCoordinatesById(selectedCoordinatesId));
-        databaseManager.addMovie(movie);
+        databaseManager.addObject(movie);
         updateBean.increaseVersion();
     }
 
@@ -64,7 +64,7 @@ public class MovieDialogBean {
         movie.setScreenwriter(databaseManager.getPersonById(selectedScreenwriterId));
         movie.setOperator(databaseManager.getPersonById(selectedOperatorId));
         movie.setCoordinates(databaseManager.getCoordinatesById(selectedCoordinatesId));
-        databaseManager.updateMovie(movie);
+        databaseManager.updateObject(movie);
         updateBean.increaseVersion();
     }
 

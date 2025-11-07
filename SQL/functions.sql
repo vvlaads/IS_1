@@ -29,7 +29,7 @@ BEGIN
     RETURN QUERY
     SELECT *
     FROM movies
-    WHERE name ILIKE name_prefix || '%'
+    WHERE name ILIKE '%' || name_prefix || '%'
     ORDER BY name;
 END;
 $$ LANGUAGE plpgsql;

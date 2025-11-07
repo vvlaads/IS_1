@@ -3,22 +3,18 @@ package lab.beans.dialogs;
 import lab.beans.util.UpdateBean;
 import lab.data.Coordinates;
 import lab.database.DatabaseManager;
-import lab.database.TestDB;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 
 @ManagedBean(name = "coordinatesDialogBean")
 @ViewScoped
 public class CoordinatesDialogBean {
     @EJB
     private DatabaseManager databaseManager;
-    @Inject
-    private TestDB testDB;
     private UpdateBean updateBean;
     private Coordinates coordinates = new Coordinates();
 
@@ -42,13 +38,12 @@ public class CoordinatesDialogBean {
     }
 
     public void addCoordinates() {
-//        databaseManager.addCoordinates(coordinates);
-        testDB.addCoordinates(coordinates);
+        databaseManager.addObject(coordinates);
         updateBean.increaseVersion();
     }
 
     public void updateCoordinates() {
-        databaseManager.updateCoordinates(coordinates);
+        databaseManager.updateObject(coordinates);
         updateBean.increaseVersion();
     }
 

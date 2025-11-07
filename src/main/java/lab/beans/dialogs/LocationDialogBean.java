@@ -38,12 +38,12 @@ public class LocationDialogBean {
     }
 
     public void addLocation() {
-        databaseManager.addLocation(location);
+        databaseManager.addObject(location);
         updateBean.increaseVersion();
     }
 
     public void updateLocation() {
-        databaseManager.updateLocation(location);
+        databaseManager.updateObject(location);
         updateBean.increaseVersion();
     }
 

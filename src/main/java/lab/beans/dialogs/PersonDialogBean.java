@@ -44,13 +44,13 @@ public class PersonDialogBean {
 
     public void addPerson() {
         person.setLocation(databaseManager.getLocationById(selectedLocationId));
-        databaseManager.addPerson(person);
+        databaseManager.addObject(person);
         updateBean.increaseVersion();
     }
 
     public void updatePerson() {
         person.setLocation(databaseManager.getLocationById(selectedLocationId));
-        databaseManager.updatePerson(person);
+        databaseManager.updateObject(person);
         updateBean.increaseVersion();
     }
 

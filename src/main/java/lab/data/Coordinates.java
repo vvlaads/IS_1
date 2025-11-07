@@ -1,12 +1,13 @@
 package lab.data;
 
+import lab.util.DBObject;
 import lab.util.annotations.NotNull;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "coordinates")
-public class Coordinates {
+public class Coordinates implements DBObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
